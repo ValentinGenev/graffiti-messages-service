@@ -1,6 +1,6 @@
 import mysql from 'mysql'
 
-export class MySqlConnection {
+export class MySqlDatabase {
     private connection: mysql.Connection
 
     constructor(configuration: mysql.ConnectionConfig) {
@@ -27,27 +27,26 @@ export class MySqlConnection {
     }
 }
 
-export function connect(configuration: mysql.ConnectionConfig): MySqlConnection {
-    const connection = new MySqlConnection(configuration)
-    connection.connect()
+export function connect(database: MySqlDatabase): MySqlDatabase {
+    database.connect()
 
-    return connection
+    return database
 }
 
-export async function setDatabase(connection: MySqlConnection): Promise<void> {
-    await createMessagesDatabase(connection)
-    await createEntriesTable(connection)
+export async function setDatabase(database: MySqlDatabase): Promise<void> {
+    await createMessagesDatabase(database)
+    await createEntriesTable(database)
 }
 
-function createMessagesDatabase(connection: MySqlConnection): Promise<any> {
-    return connection.query(`
+function createMessagesDatabase(database: MySqlDatabase): Promise<any> {
+    return database.query(`
         CREATE DATABASE IF NOT EXISTS messages;
         USE messages;`
     )
 }
 
-function createEntriesTable(connection: MySqlConnection): Promise<any> {
-    return connection.query(`
+function createEntriesTable(database: MySqlDatabase): Promise<any> {
+    return database.query(`
         CREATE TABLE IF NOT EXISTS entries (
             id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
             post_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
