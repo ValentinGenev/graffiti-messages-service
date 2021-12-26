@@ -1,21 +1,19 @@
-import express from 'express'
 import dotenv from 'dotenv'
-import * as database from './lib/database'
+import * as _database from './lib/database'
+import * as _rest from './lib/rest'
 
 dotenv.config()
 
-const dbConnection = database.connect({
+export const database = new _database.MySqlDatabase({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     multipleStatements: true
 })
-database.setDatabase(dbConnection)
-
-const server = express()
-
-server.get('/', (_request, response) => {
-    response.send('Hello world!')
+export const rest = new _rest.RestServer({
+    port: process.env.REST_PORT
 })
 
-server.listen(5000, () => console.log('Server listening on: localhost:5000'))
+_database.connect(database)
+_database.setDatabase(database)
+_rest.start(rest)

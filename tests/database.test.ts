@@ -1,23 +1,25 @@
 import dotenv from 'dotenv'
-import * as database from '../src/lib/database'
+import * as _database from '../src/lib/database'
 
 dotenv.config()
 
 describe('database test', () => {
-    let connection: database.MySqlConnection
+    let database: _database.MySqlDatabase
 
 	beforeAll(async () => {
-        connection = database.connect({
+        database = new _database.MySqlDatabase({
             host: process.env.DB_HOST,
             user: process.env.DB_USER,
             password: process.env.DB_PASSWORD,
             multipleStatements: true
         })
-        await database.setDatabase(connection)
+
+        await _database.connect(database)
+        await _database.setDatabase(database)
 	})
 
 	test('create message', async () => {
-        const result = await connection.query(`
+        const result = await database.query(`
             INSERT
                 INTO messages.entries (poster_id, poster, message)
                 VALUES ('asd', 'Jon Doe', 'Hello, world!');`
@@ -26,7 +28,7 @@ describe('database test', () => {
         expect(result.affectedRows === 1).toBeTruthy()
 	})
     test('get message', async () => {
-        const result = await connection.query(`
+        const result = await database.query(`
             SELECT *
                 FROM messages.entries
                 WHERE poster_id = ?;`,
@@ -37,12 +39,12 @@ describe('database test', () => {
     })
 
     afterAll(async () => {
-        await connection.query(`
+        await database.query(`
             DELETE
                 FROM messages.entries
                 WHERE poster_id = ?`,
             ['asd']
         )
-        await connection.end()
+        await database.end()
     })
 })
