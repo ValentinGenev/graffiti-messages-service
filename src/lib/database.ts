@@ -33,19 +33,7 @@ export function connect(database: MySqlDatabase): MySqlDatabase {
     return database
 }
 
-export async function setDatabase(database: MySqlDatabase): Promise<void> {
-    await createMessagesDatabase(database)
-    await createEntriesTable(database)
-}
-
-function createMessagesDatabase(database: MySqlDatabase): Promise<any> {
-    return database.query(`
-        CREATE DATABASE IF NOT EXISTS messages;
-        USE messages;`
-    )
-}
-
-function createEntriesTable(database: MySqlDatabase): Promise<any> {
+export function createEntriesTable(database: MySqlDatabase): Promise<any> {
     return database.query(`
         CREATE TABLE IF NOT EXISTS entries (
             id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
