@@ -6,8 +6,10 @@ dotenv.config()
 
 export const database = new _database.MySqlDatabase({
     host: process.env.DB_HOST,
+    port: Number(process.env.DB_PORT),
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
     multipleStatements: true
 })
 export const rest = new _rest.RestServer({
@@ -15,5 +17,5 @@ export const rest = new _rest.RestServer({
 })
 
 _database.connect(database)
-_database.setDatabase(database)
+_database.createEntriesTable(database)
 _rest.start(rest)
