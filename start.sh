@@ -1,5 +1,5 @@
 echo "Wait for the database"
-dockerize -wait tcp://database:3306 -timeout 20s
+while ! nc -z database 3306; do sleep 5; done;
 
 echo "Start the API"
-node dist/index.js
+node dist/index.js;
