@@ -1,4 +1,5 @@
 import express from 'express'
+import bodyParser from 'body-parser'
 
 interface ServerConfiguration {
     port?: string
@@ -21,9 +22,11 @@ export class RestServer {
     }
 }
 
-export function start(rest: RestServer) {
+export function start(rest: RestServer): void {
     const server = rest.getServer()
     const port = rest.getPort() ? rest.getPort() : '5000'
+
+    server.use(bodyParser.json())
 
     server.listen(port, () => {
         console.log(`Server listening on: localhost:${port}`)

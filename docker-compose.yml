@@ -10,6 +10,7 @@ services:
       - "${REST_PORT}:5000"
     depends_on:
       - database
+    restart: on-failure
 
   database:
     image: mysql:8.0
@@ -24,6 +25,7 @@ services:
       - "${DB_PORT}:3306"
     volumes:
       - dbdata:/var/lib/mysql
+    restart: on-failure
 
 volumes:
   dbdata:
