@@ -3,19 +3,20 @@ import * as _database from '../src/lib/database'
 
 dotenv.config()
 
-describe('database test', () => {
+describe('database tests', () => {
     let database: _database.MySqlDatabase
 
 	beforeAll(async () => {
         database = new _database.MySqlDatabase({
             host: process.env.DB_HOST,
+            port: Number(process.env.DB_PORT),
             user: process.env.DB_USER,
             password: process.env.DB_PASSWORD,
+            database: process.env.DB_NAME,
             multipleStatements: true
         })
 
-        await _database.connect(database)
-        await _database.setDatabase(database)
+        _database.connect(database)
 	})
 
 	test('create message', async () => {
