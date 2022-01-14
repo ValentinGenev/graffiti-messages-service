@@ -1,29 +1,11 @@
-import dotenv from 'dotenv'
-import * as _database from '../src/lib/database'
+import { database } from '../src/index'
 
-dotenv.config()
-
-describe('database tests', () => {
-    let database: _database.MySqlDatabase
-
-	beforeAll(async () => {
-        database = new _database.MySqlDatabase({
-            host: process.env.DB_HOST,
-            port: Number(process.env.DB_PORT),
-            user: process.env.DB_USER,
-            password: process.env.DB_PASSWORD,
-            database: process.env.DB_NAME,
-            multipleStatements: true
-        })
-
-        _database.connect(database)
-	})
-
+describe('Database tests:', () => {
 	test('create message', async () => {
         const result = await database.query(`
             INSERT
                 INTO messages.entries (poster_id, poster, message)
-                VALUES ('asd', 'Jon Doe', 'Hello, world!');`
+                VALUES ('randomfingerprintstring_test_database', 'Jon Doe', 'Hello, world!');`
         )
 
         expect(result.affectedRows === 1).toBeTruthy()
@@ -33,7 +15,7 @@ describe('database tests', () => {
             SELECT *
                 FROM messages.entries
                 WHERE poster_id = ?;`,
-            ['asd']
+            ['randomfingerprintstring_test_database']
         )
 
         expect(result[0].message === 'Hello, world!').toBeTruthy()
@@ -44,8 +26,8 @@ describe('database tests', () => {
             DELETE
                 FROM messages.entries
                 WHERE poster_id = ?`,
-            ['asd']
+            ['randomfingerprintstring_test_database']
         )
-        await database.end()
+        database.end()
     })
 })
