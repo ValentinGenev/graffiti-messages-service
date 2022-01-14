@@ -1,7 +1,7 @@
 import { database } from "..";
-import { Post } from "../interface/IMessage";
+import { Message } from "../interface/IMessage";
 
-export async function insertMessage(data: Post) {
+export async function insertMessage(data: Message) {
     const result = await database.query(`
         INSERT
             INTO messages.entries (poster_id, poster, message)

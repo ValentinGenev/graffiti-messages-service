@@ -1,7 +1,7 @@
 import { RestServer } from "../lib/rest"
 import { healthCheck } from "./health-check"
 import { postMessage } from "./post"
-import { getMessages } from "./get"
+import { getMessages, getMessage } from "./get"
 
 export function setRoutes(rest: RestServer): void {
     const server = rest.getServer()
@@ -9,4 +9,5 @@ export function setRoutes(rest: RestServer): void {
     server.get('/health-check', healthCheck)
     server.post('/message', postMessage)
     server.get('/messages', getMessages)
+    server.get('/last-message/:posterId', getMessage)
 }

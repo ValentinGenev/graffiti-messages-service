@@ -19,5 +19,8 @@ export const rest = new _rest.RestServer({
 
 _database.connect(database)
 _database.createEntriesTable(database)
-_rest.start(rest)
-_router.setRoutes(rest)
+
+if (process.env.NODE_ENV !== 'test') {
+    _rest.start(rest)
+    _router.setRoutes(rest)
+}
