@@ -4,7 +4,8 @@ import { Message } from "../interface/IMessage";
 export async function selectMessages(): Promise<Message[]> {
     return await database.query(`
         SELECT *
-        FROM messages.entries`
+        FROM messages.entries
+        ORDER BY id DESC`
     )
 }
 
