@@ -1,8 +1,9 @@
 import { Response } from './IResponses'
 
 export type Message = {
+    post_date?: string
     poster_id: string
-    name: string
+    poster: string
     message: string
 }
 

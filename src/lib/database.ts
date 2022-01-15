@@ -19,6 +19,7 @@ export class MySqlDatabase {
     public query(queryString: string, parameters: any[] = []): Promise<any> {
         return new Promise((resolve, reject) => {
             this.connection.query(queryString, parameters, (error, result) => {
+                // TODO: error handling for the SQL
                 if (error) reject(error.message)
 
                 resolve(result)
@@ -33,8 +34,8 @@ export function connect(database: MySqlDatabase): MySqlDatabase {
     return database
 }
 
-export function createEntriesTable(database: MySqlDatabase): Promise<any> {
-    return database.query(`
+export function createEntriesTable(database: MySqlDatabase): void {
+    database.query(`
         CREATE TABLE IF NOT EXISTS entries (
             id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
             post_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -43,4 +44,11 @@ export function createEntriesTable(database: MySqlDatabase): Promise<any> {
             message TEXT
         );`
     )
+}
+
+// TODO: investigate deeper if this is going to cause sync issues
+export function syncZoneWithNode(database: MySqlDatabase): void {
+    const offset = Math.abs(new Date().getTimezoneOffset() / 60)
+
+    database.query(`SET time_zone = '+${offset < 10 ? '0' + offset : offset}:00';`)
 }

@@ -2,7 +2,7 @@ import { database } from '../src/index'
 import { readMessages, readMessage } from '../src/services/read'
 import { ERRORS } from '../src/utilities/constants'
 
-describe('Service tests:', () => {
+describe('Read service tests:', () => {
     const posterId = 'randomfingerprintstring_test_read'
 
     beforeAll(async () => {
@@ -15,31 +15,31 @@ describe('Service tests:', () => {
     })
 
 	test('readMessages()', async () => {
-        const result = await readMessages()
+        const response = await readMessages()
 
-        expect(result.success).toBeTruthy()
-        expect(result.messages && result.messages.length > 0).toBeTruthy()
+        expect(response.success).toBeTruthy()
+        expect(response.messages && response.messages.length > 0).toBeTruthy()
     })
     test('readMessage()', async () => {
-        const result = await readMessage(posterId)
+        const response = await readMessage(posterId)
 
-        expect(result.success).toBeTruthy()
-        expect(result.message).toBeDefined()
-        expect(result.message && result.message.poster_id === posterId).toBeTruthy()
+        expect(response.success).toBeTruthy()
+        expect(response.message).toBeDefined()
+        expect(response.message && response.message.poster_id === posterId).toBeTruthy()
     })
     test('readMessage() fails with bad posterId', async () => {
-        const result = await readMessage('badposterid')
+        const response = await readMessage('badposterid')
 
-        expect(result.success).toBeFalsy()
-        expect(result.error).toBeDefined()
-        expect(result.error && result.error.code === ERRORS.notFound).toBeTruthy()
+        expect(response.success).toBeFalsy()
+        expect(response.error).toBeDefined()
+        expect(response.error && response.error.code === ERRORS.notFound).toBeTruthy()
     })
     test('readMessage() fails without posterId', async () => {
-        const result = await readMessage('')
+        const response = await readMessage('')
 
-        expect(result.success).toBeFalsy()
-        expect(result.error).toBeDefined()
-        expect(result.error && result.error.code === ERRORS.missingData).toBeTruthy()
+        expect(response.success).toBeFalsy()
+        expect(response.error).toBeDefined()
+        expect(response.error && response.error.code === ERRORS.missingData).toBeTruthy()
     })
 
     afterAll(async () => {
