@@ -9,5 +9,4 @@ RUN npm run build
 
 EXPOSE 5000
 
-RUN chmod +x start.sh
-ENTRYPOINT ./start.sh
+CMD [ "node", "dist/index.js" ]
