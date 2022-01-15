@@ -1,10 +1,10 @@
 import { database } from "..";
 import { Message } from "../interface/IMessage";
 
-export async function insertMessage(data: Message) {
-    const result = await database.query(`
+export function insertMessage(data: Message) {
+    database.query(`
         INSERT
             INTO messages.entries (poster_id, poster, message)
-            VALUES ('${data.poster_id}', '${data.name}', '${data.message}');`
+            VALUES ('${data.poster_id}', '${data.poster}', '${data.message}');`
     )
 }
