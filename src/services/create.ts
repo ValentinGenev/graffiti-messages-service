@@ -27,14 +27,15 @@ export async function createMessage(data: Message): Promise<PostMessageResp> {
             }
         }
     }
-    
+
+    data.message = sanitizeHtml(data.message)
     await insertMessage(data)
 
     return { success: true, message: data }
 }
 
 // TODO: maybe this should be handled by the client?
-async function isSpam(posterId: string): Promise<boolean> {
+export async function isSpam(posterId: string): Promise<boolean> {
     const lastPost = await selectMessage(posterId)
 
     if (lastPost.length === 1) {
@@ -42,4 +43,18 @@ async function isSpam(posterId: string): Promise<boolean> {
     }
 
     return false
+}
+
+export function sanitizeHtml(message: string): string {
+    const badTags = ['link', 'style', 'iframe', 'script', 'svg']
+    let result = message
+
+    for (const tag of badTags) {
+        const openingTag = new RegExp(`<${tag}[^>]*>`, 'ig')
+        const closingTag = new RegExp(`<\/${tag}[^>]*>`, 'ig')
+
+        result = result.replace(openingTag, '').replace(closingTag, '')
+    }
+    
+    return result
 }
