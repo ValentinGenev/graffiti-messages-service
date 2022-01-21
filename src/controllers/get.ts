@@ -1,8 +1,11 @@
 import { readMessages, readMessage } from "../services/read"
 
-export async function getMessages(_request: Record<string, any>, response: Record<string, any>): Promise<void> {
+export async function getMessages(request: Record<string, any>, response: Record<string, any>): Promise<void> {
     try {
-        response.json(await readMessages())
+        response.json(await readMessages({
+            pageIndex: request.params.pageIndex,
+            postsPerPage: request.query.postsPerPage
+        }))
     }
     catch (error) {
         // TODO: figure a way to log errors

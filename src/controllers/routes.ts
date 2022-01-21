@@ -9,5 +9,6 @@ export function setRoutes(rest: RestServer): void {
     server.get('/health-check', healthCheck)
     server.post('/message', postMessage)
     server.get('/messages', getMessages)
+    server.get('/messages/:pageIndex', getMessages)
     server.get('/last-message/:posterId', getMessage)
 }

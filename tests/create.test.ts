@@ -17,14 +17,14 @@ describe('Create service tests:', () => {
         expect(response.message).toBeDefined()
         expect(response.message && response.message.message === 'Test message').toBeTruthy()
     })
-    test('createMessage() should fail withing the spam timeout', async () => {
+    test('createMessage() fails withing the spam timeout', async () => {
         const response = await createMessage(data)
 
         expect(response.success).toBeFalsy()
         expect(response.message).toBeUndefined()
         expect(response.error && response.error.code === ERRORS.tooManyRequests).toBeTruthy()
     })
-    test('createMessage() should fail without message', async () => {
+    test('createMessage() fails without message', async () => {
         data.message = ''
         const response = await createMessage(data)
 
