@@ -15,10 +15,17 @@ describe('Read service tests:', () => {
     })
 
 	test('readMessages()', async () => {
-        const response = await readMessages()
+        const response = await readMessages({ pageIndex: undefined, postsPerPage: undefined })
 
         expect(response.success).toBeTruthy()
         expect(response.messages && response.messages.length > 0).toBeTruthy()
+        expect(response.pagination && response.pagination.pageIndex === 1).toBeTruthy()
+    })
+    test('readMessages() fails bad pageIndex', async () => {
+        const response = await readMessages({ pageIndex: 999, postsPerPage: undefined })
+
+        expect(response.success).toBeFalsy()
+        expect(response.error && response.error.code === ERRORS.notFound).toBeTruthy()
     })
     test('readMessage()', async () => {
         const response = await readMessage(posterId)

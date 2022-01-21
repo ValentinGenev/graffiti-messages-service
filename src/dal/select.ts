@@ -1,16 +1,22 @@
 import { database } from "..";
 import { Message } from "../interface/IMessage";
+import { Pagination } from "../interface/IRequest";
 
-export async function selectMessages(): Promise<Message[]> {
-    return await database.query(`
+export function selectMessages(pagination: Pagination): Promise<Message[]> {
+    const offset = pagination.pageIndex && pagination.postsPerPage ?
+        (pagination.pageIndex - 1) * pagination.postsPerPage : 0
+
+    return database.query(`
         SELECT *
         FROM messages.entries
-        ORDER BY id DESC`
+        ORDER BY id DESC
+        LIMIT ?, ?`,
+        [offset, pagination.postsPerPage]
     )
 }
 
-export async function selectMessage(posterId: string): Promise<Message[]> {
-    return await database.query(`
+export function selectMessage(posterId: string): Promise<Message[]> {
+    return database.query(`
         SELECT *
         FROM messages.entries
         WHERE poster_id = ?
@@ -18,4 +24,13 @@ export async function selectMessage(posterId: string): Promise<Message[]> {
         LIMIT 1`,
         [posterId]
     )
+}
+
+export async function countPosts(): Promise<number> {
+    const data = await database.query(`
+        SELECT COUNT(id)
+        FROM messages.entries`
+    )
+
+    return data.length ? data[0]['COUNT(id)'] : 0
 }

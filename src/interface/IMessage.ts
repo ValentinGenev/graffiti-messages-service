@@ -1,4 +1,5 @@
-import { Response } from './IResponses'
+import * as IReq from './IRequest'
+import * as IRes from './IResponse'
 
 export type Message = {
     post_date?: string
@@ -7,13 +8,15 @@ export type Message = {
     message: string
 }
 
-export interface PostMessageResp extends Response {
+export interface PostMessageResp extends IRes.Response {
     message?: Message
 }
 
-export interface GetMessagesResp extends Response {
+export interface GetMessagesReq extends IReq.Pagination { }
+export interface GetMessagesResp extends IRes.Response {
     messages?: Message[]
+    pagination?: IRes.Pagination
 }
-export interface GetMessageResp extends Response {
+export interface GetMessageResp extends IRes.Response {
     message?: Message
 }
