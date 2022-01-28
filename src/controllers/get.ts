@@ -1,4 +1,4 @@
-import { readMessages, readMessage } from "../services/read"
+import { readMessages, readMessage } from "../actions/read"
 
 export async function getMessages(request: Record<string, any>, response: Record<string, any>): Promise<void> {
     try {

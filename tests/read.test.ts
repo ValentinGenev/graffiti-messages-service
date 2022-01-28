@@ -1,5 +1,5 @@
 import { database } from '../src/index'
-import { readMessages, readMessage } from '../src/services/read'
+import { readMessages, readMessage } from '../src/actions/read'
 import { ERRORS } from '../src/utilities/constants'
 
 describe('Read service tests:', () => {

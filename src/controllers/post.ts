@@ -1,4 +1,4 @@
-import { createMessage } from "../services/create"
+import { createMessage } from "../actions/create"
 
 export async function postMessage(request: Record<string, any>, response: Record<string, any>): Promise<void> {
     try {

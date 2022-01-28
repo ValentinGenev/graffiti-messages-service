@@ -1,6 +1,6 @@
 import { database } from '../src'
 import { Message } from '../src/interface/IMessage'
-import { createMessage, isSpam, sanitizeHtml } from '../src/services/create'
+import { createMessage, isSpam, sanitizeHtml } from '../src/actions/create'
 import { ERRORS } from '../src/utilities/constants'
 
 describe('Create service tests:', () => {
