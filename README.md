@@ -1,4 +1,4 @@
-# sand-messages
+# Graffiti's messages service
 A simple REST API for a message board
 
 # Run locally

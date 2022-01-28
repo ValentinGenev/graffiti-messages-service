@@ -1,10 +1,10 @@
 FROM node:17.3-alpine
-WORKDIR /api-messages
+WORKDIR /graffiti-messages-api
 
-COPY package.json /api-messages/
+COPY package.json /graffiti-messages-api/
 RUN npm install --production
 
-COPY . /api-messages/
+COPY . /graffiti-messages-api/
 RUN npm run build
 
 EXPOSE 5000
