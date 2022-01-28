@@ -1,7 +1,10 @@
+import dotenv from 'dotenv'
 import { database } from '../src'
 import { Message } from '../src/interfaces/IMessage'
 import { createMessage, isSpam, sanitizeHtml } from '../src/actions/create'
 import { ERRORS } from '../src/utilities/constants'
+
+dotenv.config()
 
 describe('Create service tests:', () => {
     const data: Message = {
@@ -47,7 +50,7 @@ describe('Create service tests:', () => {
     afterAll(async () => {
         await database.query(`
             DELETE
-                FROM messages.entries
+                FROM ${process.env.DB_NAME}.messages
                 WHERE poster_id = ?`,
             ['randomfingerprintstring_test_create']
         )

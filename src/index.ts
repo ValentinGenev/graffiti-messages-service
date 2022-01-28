@@ -18,7 +18,7 @@ export const rest = new _rest.RestServer({
 })
 
 _database.connect(database)
-_database.createEntriesTable(database)
+_database.createMessagesTable(database)
 _database.syncZoneWithNode(database)
 
 if (process.env.NODE_ENV !== 'test') {

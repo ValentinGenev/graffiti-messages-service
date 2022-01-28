@@ -1,10 +1,13 @@
+import dotenv from 'dotenv'
 import { database } from '../src/index'
+
+dotenv.config()
 
 describe('Database tests:', () => {
 	test('create message', async () => {
         const result = await database.query(`
             INSERT
-                INTO messages.entries (poster_id, poster, message)
+                INTO ${process.env.DB_NAME}.messages (poster_id, poster, message)
                 VALUES ('randomfingerprintstring_test_database', 'Jon Doe', 'Hello, world!');`
         )
 
@@ -13,7 +16,7 @@ describe('Database tests:', () => {
     test('get message', async () => {
         const result = await database.query(`
             SELECT *
-                FROM messages.entries
+                FROM ${process.env.DB_NAME}.messages
                 WHERE poster_id = ?;`,
             ['randomfingerprintstring_test_database']
         )
@@ -24,7 +27,7 @@ describe('Database tests:', () => {
     afterAll(async () => {
         await database.query(`
             DELETE
-                FROM messages.entries
+                FROM ${process.env.DB_NAME}.messages
                 WHERE poster_id = ?`,
             ['randomfingerprintstring_test_database']
         )

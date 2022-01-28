@@ -34,9 +34,9 @@ export function connect(database: MySqlDatabase): MySqlDatabase {
     return database
 }
 
-export function createEntriesTable(database: MySqlDatabase): void {
+export function createMessagesTable(database: MySqlDatabase): void {
     database.query(`
-        CREATE TABLE IF NOT EXISTS entries (
+        CREATE TABLE IF NOT EXISTS messages (
             id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
             post_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             poster_id VARCHAR(256),

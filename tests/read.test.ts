@@ -1,6 +1,9 @@
+import dotenv from 'dotenv'
 import { database } from '../src/index'
 import { readMessages, readMessage } from '../src/actions/read'
 import { ERRORS } from '../src/utilities/constants'
+
+dotenv.config()
 
 describe('Read service tests:', () => {
     const posterId = 'randomfingerprintstring_test_read'
@@ -8,7 +11,7 @@ describe('Read service tests:', () => {
     beforeAll(async () => {
         await database.query(`
             INSERT
-                INTO messages.entries (poster_id, poster, message)
+                INTO ${process.env.DB_NAME}.messages (poster_id, poster, message)
                 VALUES (?, 'Jon Doe', 'Test message');`,
             [posterId]
         )
@@ -52,7 +55,7 @@ describe('Read service tests:', () => {
     afterAll(async () => {
         await database.query(`
             DELETE
-                FROM messages.entries
+                FROM ${process.env.DB_NAME}.messages
                 WHERE poster_id = ?`,
             [posterId]
         )
