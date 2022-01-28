@@ -1,7 +1,7 @@
 import * as Dal from "../dal/select"
-import { GetMessageResp, GetMessagesReq, GetMessagesResp } from "../interface/IMessage";
-import * as IReq from "../interface/IRequest";
-import * as IRes from "../interface/IResponse";
+import { GetMessageResp, GetMessagesReq, GetMessagesResp } from "../interfaces/IMessage";
+import * as IReq from "../interfaces/IRequest";
+import * as IRes from "../interfaces/IResponse";
 import { ERRORS } from "../utilities/constants";
 
 const DEFAULT_PAGE_INDEX = 1

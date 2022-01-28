@@ -1,5 +1,5 @@
 import { database } from '../src'
-import { Message } from '../src/interface/IMessage'
+import { Message } from '../src/interfaces/IMessage'
 import { createMessage, isSpam, sanitizeHtml } from '../src/actions/create'
 import { ERRORS } from '../src/utilities/constants'
 

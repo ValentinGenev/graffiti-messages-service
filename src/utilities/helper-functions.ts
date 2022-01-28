@@ -1,4 +1,4 @@
-import { Message } from "../interface/IMessage";
+import { Message } from "../interfaces/IMessage";
 
 /**
  * @param timeLimit default is 2 minutes in ms

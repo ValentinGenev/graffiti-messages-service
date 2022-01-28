@@ -1,7 +1,7 @@
 import dotenv from 'dotenv'
 import { insertMessage } from "../dal/insert"
 import { selectMessage } from "../dal/select"
-import { Message, PostMessageResp } from "../interface/IMessage"
+import { Message, PostMessageResp } from "../interfaces/IMessage"
 import { posterIsSpamming } from "../utilities/helper-functions"
 import { ERRORS } from "../utilities/constants"
 

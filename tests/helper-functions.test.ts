@@ -1,4 +1,4 @@
-import { Message } from '../src/interface/IMessage'
+import { Message } from '../src/interfaces/IMessage'
 import { convertUnixToDbTime, posterIsSpamming } from '../src/utilities/helper-functions'
 
 describe('Helper functions tests:', () => {

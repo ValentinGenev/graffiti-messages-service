@@ -1,6 +1,6 @@
 import { database } from "..";
-import { Message } from "../interface/IMessage";
-import { Pagination } from "../interface/IRequest";
+import { Message } from "../interfaces/IMessage";
+import { Pagination } from "../interfaces/IRequest";
 
 export function selectMessages(pagination: Pagination): Promise<Message[]> {
     const offset = pagination.pageIndex && pagination.postsPerPage ?

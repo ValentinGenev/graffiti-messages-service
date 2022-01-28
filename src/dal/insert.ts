@@ -1,5 +1,5 @@
 import { database } from "..";
-import { Message } from "../interface/IMessage";
+import { Message } from "../interfaces/IMessage";
 
 export function insertMessage(data: Message): Promise<Record<string, any>> {
     return database.query(`
