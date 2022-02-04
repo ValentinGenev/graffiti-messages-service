@@ -1,6 +1,5 @@
 import express from 'express'
 import bodyParser from 'body-parser'
-import fingerprint from 'express-fingerprint'
 
 interface ServerConfiguration {
     port?: string
@@ -25,10 +24,6 @@ export class RestServer {
 
 export function useBodyParser(rest: RestServer): void {
     rest.getServer().use(bodyParser.json())
-}
-
-export function useFingerPrint(rest: RestServer): void {
-    rest.getServer().use(fingerprint())
 }
 
 export function start(rest: RestServer): void {

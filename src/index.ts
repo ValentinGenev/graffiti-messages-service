@@ -23,7 +23,6 @@ _database.syncZoneWithNode(database)
 
 if (process.env.NODE_ENV !== 'test') {
     _rest.useBodyParser(rest)
-    _rest.useFingerPrint(rest)
     _rest.start(rest)
     _router.setRoutes(rest)
 }

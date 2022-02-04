@@ -2,7 +2,7 @@ import { createMessage } from "../actions/create"
 
 export async function postMessage(request: Record<string, any>, response: Record<string, any>): Promise<void> {
     try {
-        request.body.poster_id = request.fingerprint.hash
+        request.body.poster_id = request.header('Fingerprint')
 
         response.json(await createMessage(request.body))
     }
