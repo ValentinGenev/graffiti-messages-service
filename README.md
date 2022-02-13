@@ -1,5 +1,5 @@
 # Graffiti's messages service
-A simple REST API for a message board
+A simple post message REST API for the Graffiti project
 
 # Run locally
 - run `docker-compose build`;
