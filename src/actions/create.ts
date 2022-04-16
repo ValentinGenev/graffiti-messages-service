@@ -28,6 +28,16 @@ export async function createMessage(data: Message): Promise<PostMessageResp> {
         }
     }
 
+    if (data.message.length > Number(process.env.MAX_MESSAGE_LENGTH)) {
+        return {
+            success: false,
+            error: {
+                code: ERRORS.maxLengthExceeded,
+                message: `Your message exceeds the maximum message length`
+            }
+        }
+    }
+
     data.message = sanitizeHtml(data.message)
     await insertMessage(data)
 
@@ -55,6 +65,6 @@ export function sanitizeHtml(message: string): string {
 
         result = result.replace(openingTag, '').replace(closingTag, '')
     }
-    
+
     return result
 }
