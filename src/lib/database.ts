@@ -33,22 +33,3 @@ export function connect(database: MySqlDatabase): MySqlDatabase {
 
     return database
 }
-
-export function createMessagesTable(database: MySqlDatabase): void {
-    database.query(`
-        CREATE TABLE IF NOT EXISTS messages (
-            id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-            post_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            poster_id VARCHAR(256),
-            poster TEXT,
-            message TEXT
-        );`
-    )
-}
-
-// TODO: investigate deeper if this is going to cause sync issues
-export function syncZoneWithNode(database: MySqlDatabase): void {
-    const offset = Math.abs(new Date().getTimezoneOffset() / 60)
-
-    database.query(`SET time_zone = '+${offset < 10 ? '0' + offset : offset}:00';`)
-}

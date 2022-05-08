@@ -11,8 +11,10 @@ export async function getMessages(request: Record<string, any>, response: Record
         // TODO: figure a way to log errors
         console.log(error)
         response.json({ success: false })
-    }  
+    }
 }
+
+// TODO: get messages by tag or tags
 
 export async function getMessage(request: Record<string, any>, response: Record<string, any>): Promise<void> {
     try {
@@ -22,5 +24,5 @@ export async function getMessage(request: Record<string, any>, response: Record<
         // TODO: figure a way to log errors
         console.log(error)
         response.json({ success: false })
-    }  
+    }
 }

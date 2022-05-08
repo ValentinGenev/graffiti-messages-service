@@ -40,11 +40,11 @@ export async function createMessage(data: Message): Promise<PostMessageResp> {
 
     data.message = sanitizeHtml(data.message)
     await insertMessage(data)
+    // TODO: add tags insertions
 
     return { success: true, message: data }
 }
 
-// TODO: maybe this should be handled by the client?
 export async function isSpam(posterId: string): Promise<boolean> {
     const lastPost = await selectMessage(posterId)
 
