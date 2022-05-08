@@ -5,7 +5,6 @@ describe('Helper functions tests:', () => {
     const lastPost: Message = {
         post_date: '2022-01-01T00:00:00.000Z',
         poster_id: 'randomfingerprintstring_test_utilities',
-        poster: 'Jon Doe',
         message: 'Test message'
     }
 
