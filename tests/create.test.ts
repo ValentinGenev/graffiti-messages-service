@@ -20,7 +20,7 @@ describe('Create service tests:', () => {
         expect(response.message).toBeDefined()
         expect(response.message && response.message.message === 'Test message').toBeTruthy()
     })
-    test('createMessage() fails withing the spam timeout', async () => {
+    test('createMessage() fails within the spam timeout', async () => {
         const response = await createMessage(data)
 
         expect(response.success).toBeFalsy()

@@ -11,3 +11,5 @@ export function insertMessage(data: Message): Promise<Record<string, any>> {
             VALUES ('${data.poster_id}', '${data.poster}', '${data.message}');`
     )
 }
+
+// TODO: insert the tags and relate them to the messages

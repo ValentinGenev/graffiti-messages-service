@@ -1,11 +1,13 @@
 import dotenv from 'dotenv'
-import * as _database from './lib/database'
-import * as _rest from './lib/rest'
-import * as _router from './controllers/routes'
+import * as libDatabase from './lib/database'
+import * as libRest from './lib/rest'
+import * as dalCreate from './dal/create'
+import * as dalSettings from './dal/settings'
+import * as router from './controllers/routes'
 
 dotenv.config()
 
-export const database = new _database.MySqlDatabase({
+export const database = new libDatabase.MySqlDatabase({
     host: process.env.DB_HOST,
     port: Number(process.env.DB_PORT),
     user: process.env.DB_USER,
@@ -13,16 +15,18 @@ export const database = new _database.MySqlDatabase({
     database: process.env.DB_NAME,
     multipleStatements: true
 })
-export const rest = new _rest.RestServer({
+export const rest = new libRest.RestServer({
     port: process.env.REST_PORT
 })
 
-_database.connect(database)
-_database.createMessagesTable(database)
-_database.syncZoneWithNode(database)
+libDatabase.connect(database)
+dalCreate.createTables(database)
+dalSettings.syncZoneWithNode(database)
 
 if (process.env.NODE_ENV !== 'test') {
-    _rest.useBodyParser(rest)
-    _rest.start(rest)
-    _router.setRoutes(rest)
+    libRest.useBodyParser(rest)
+    libRest.start(rest)
+    router.setRoutes(rest)
 }
+
+// TODO: make sure that the server doesn't hand if an error is thrown
