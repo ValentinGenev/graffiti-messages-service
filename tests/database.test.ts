@@ -7,8 +7,8 @@ describe('Database tests:', () => {
 	test('create message', async () => {
         const result = await database.query(`
             INSERT
-                INTO ${process.env.DB_NAME}.messages (poster_id, poster, message)
-                VALUES ('randomfingerprintstring_test_database', 'Jon Doe', 'Hello, world!');`
+                INTO ${process.env.DB_NAME}.messages (poster_id, message)
+                VALUES ('randomfingerprintstring_test_database', 'Hello, world!');`
         )
 
         expect(result.affectedRows === 1).toBeTruthy()

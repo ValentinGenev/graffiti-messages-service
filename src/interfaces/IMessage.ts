@@ -4,7 +4,6 @@ import * as IRes from './IResponse'
 export type Message = {
     post_date?: string
     poster_id: string
-    poster: string
     message: string
 }
 

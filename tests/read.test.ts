@@ -11,8 +11,8 @@ describe('Read service tests:', () => {
     beforeAll(async () => {
         await database.query(`
             INSERT
-                INTO ${process.env.DB_NAME}.messages (poster_id, poster, message)
-                VALUES (?, 'Jon Doe', 'Test message');`,
+                INTO ${process.env.DB_NAME}.messages (poster_id, message)
+                VALUES (?, 'Test message');`,
             [posterId]
         )
     })

@@ -9,7 +9,6 @@ dotenv.config()
 describe('Create service tests:', () => {
     const data: Message = {
         poster_id: 'randomfingerprintstring_test_create',
-        poster: 'Jon Doe',
         message: '<script>Test message</script>'
     }
 
