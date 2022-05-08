@@ -13,7 +13,6 @@ async function createMessagesTable(database: MySqlDatabase): Promise<void> {
             id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
             post_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             poster_id VARCHAR(256),
-            poster TEXT,
             message TEXT
         );`
     )
