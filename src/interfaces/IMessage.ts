@@ -2,9 +2,11 @@ import * as IReq from './IRequest'
 import * as IRes from './IResponse'
 
 export type Message = {
+    id?: number,
     post_date?: string
     poster_id: string
     message: string
+    tags?: string[]
 }
 
 export interface PostMessageResp extends IRes.Response {

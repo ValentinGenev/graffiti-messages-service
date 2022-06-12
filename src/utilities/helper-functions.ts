@@ -10,6 +10,20 @@ export function posterIsSpamming(lastPost: Message, timeLimit: number = 120000):
     return currentTime - postTime < timeLimit
 }
 
+export function sanitizeHtml(message: string): string {
+    const badTags = ['link', 'style', 'iframe', 'script', 'svg']
+    let result = message
+
+    for (const tag of badTags) {
+        const openingTag = new RegExp(`<${tag}[^>]*>`, 'ig')
+        const closingTag = new RegExp(`<\/${tag}[^>]*>`, 'ig')
+
+        result = result.replace(openingTag, '').replace(closingTag, '')
+    }
+
+    return result
+}
+
 /**
  * @returns 2022-01-01T00:00:00.000Z
  */

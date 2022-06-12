@@ -22,7 +22,8 @@ async function createTagsTable(database: MySqlDatabase): Promise<void> {
     database.query(`
         CREATE TABLE IF NOT EXISTS tags (
             id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-            tag VARCHAR(256)
+            name VARCHAR(256) NOT NULL,
+            UNIQUE (name)
         );`
     )
 }

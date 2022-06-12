@@ -1,4 +1,4 @@
-import { readMessages, readMessage } from "../actions/read"
+import { readMessages, readMessageByPoster } from "../actions/read"
 
 export async function getMessages(request: Record<string, any>, response: Record<string, any>): Promise<void> {
     try {
@@ -18,7 +18,7 @@ export async function getMessages(request: Record<string, any>, response: Record
 
 export async function getMessage(request: Record<string, any>, response: Record<string, any>): Promise<void> {
     try {
-        response.json(await readMessage(request.params.posterId))
+        response.json(await readMessageByPoster(request.params.posterId))
     }
     catch (error) {
         // TODO: figure a way to log errors

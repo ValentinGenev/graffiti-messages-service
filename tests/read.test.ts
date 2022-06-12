@@ -1,6 +1,6 @@
 import dotenv from 'dotenv'
 import { database } from '../src/index'
-import { readMessages, readMessage } from '../src/actions/read'
+import { readMessages, readMessageByPoster } from '../src/actions/read'
 import { ERRORS } from '../src/utilities/constants'
 
 dotenv.config()
@@ -30,22 +30,22 @@ describe('Read service tests:', () => {
         expect(response.success).toBeFalsy()
         expect(response.error && response.error.code === ERRORS.notFound).toBeTruthy()
     })
-    test('readMessage()', async () => {
-        const response = await readMessage(posterId)
+    test('readMessageByPoster()', async () => {
+        const response = await readMessageByPoster(posterId)
 
         expect(response.success).toBeTruthy()
         expect(response.message).toBeDefined()
         expect(response.message && response.message.poster_id === posterId).toBeTruthy()
     })
-    test('readMessage() fails with bad posterId', async () => {
-        const response = await readMessage('badposterid')
+    test('readMessageByPoster() fails with bad posterId', async () => {
+        const response = await readMessageByPoster('badposterid')
 
         expect(response.success).toBeFalsy()
         expect(response.error).toBeDefined()
         expect(response.error && response.error.code === ERRORS.notFound).toBeTruthy()
     })
-    test('readMessage() fails without posterId', async () => {
-        const response = await readMessage('')
+    test('readMessageByPoster() fails without posterId', async () => {
+        const response = await readMessageByPoster('')
 
         expect(response.success).toBeFalsy()
         expect(response.error).toBeDefined()
