@@ -1,5 +1,5 @@
 import { Message } from '../src/interfaces/IMessage'
-import { convertUnixToDbTime, posterIsSpamming } from '../src/utilities/helper-functions'
+import { convertUnixToDbTime, posterIsSpamming, sanitizeHtml } from '../src/utilities/helper-functions'
 
 describe('Helper functions tests:', () => {
     const lastPost: Message = {
@@ -30,5 +30,13 @@ describe('Helper functions tests:', () => {
         lastPost.post_date = convertUnixToDbTime(Date.now() - 30000)
 
         expect(posterIsSpamming(lastPost, 60000)).toBeTruthy()
+    })
+
+    test('sanitizeHtml()', async () => {
+        expect(sanitizeHtml('<style>test</style>') === 'test').toBeTruthy()
+        expect(sanitizeHtml('<style><style>test</style></style>') === 'test').toBeTruthy()
+        expect(sanitizeHtml('<style><script src="myScript.js">test</script></style>') === 'test').toBeTruthy()
+        expect(sanitizeHtml('<iframe src="">test</iframe>') === 'test').toBeTruthy()
+        expect(sanitizeHtml('<link rel="stylesheet" href="styles.css">') === '').toBeTruthy()
     })
 })

@@ -33,18 +33,18 @@ export async function readMessages(request: GetMessagesReq): Promise<GetMessages
     }
 }
 
-export async function readMessage(posterId: string): Promise<GetMessageResp> {
-    if (posterId === '') {
+export async function readMessageByPoster(id: string): Promise<GetMessageResp> {
+    if (id === '') {
         return {
             success: false,
             error: {
                 code: ERRORS.missingData,
-                message: 'Missing data: posterId'
+                message: 'Missing data: id'
             }
         }
     }
 
-    const message = await Dal.selectMessage(posterId)
+    const message = await Dal.selectLatestMessageByPoster(id)
 
     if (message.length === 0) {
         return {
@@ -76,7 +76,7 @@ async function getPaginationData(pagination: IReq.Pagination): Promise<IRes.Pagi
         paginationData.nextPageIndex = pageIndex + 1
     }
     if (pageIndex !== 1) {
-        paginationData.previousPageIndex = pageIndex - 1 
+        paginationData.previousPageIndex = pageIndex - 1
     }
 
     return paginationData

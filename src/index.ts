@@ -29,4 +29,4 @@ if (process.env.NODE_ENV !== 'test') {
     router.setRoutes(rest)
 }
 
-// TODO: make sure that the server doesn't hand if an error is thrown
+// TODO: make sure that the server doesn't hang if an error is thrown

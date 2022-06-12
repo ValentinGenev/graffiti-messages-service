@@ -19,7 +19,10 @@
 
     /* Advanced Options */
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+
+    /* Error handling */
+    "useUnknownInCatchVariables": false
   },
   "exclude": ["dist", "tests"]
 }

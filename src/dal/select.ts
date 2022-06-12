@@ -2,6 +2,7 @@ import dotenv from 'dotenv'
 import { database } from "..";
 import { Message } from "../interfaces/IMessage";
 import { Pagination } from "../interfaces/IRequest";
+import { Tag } from '../interfaces/ITag';
 
 dotenv.config()
 
@@ -11,20 +12,20 @@ export function selectMessages(pagination: Pagination): Promise<Message[]> {
 
     return database.query(`
         SELECT *
-        FROM ${process.env.DB_NAME}.messages
-        ORDER BY id DESC
-        LIMIT ?, ?`,
+            FROM ${process.env.DB_NAME}.messages
+            ORDER BY id DESC
+            LIMIT ?, ?`,
         [offset, pagination.postsPerPage]
     )
 }
 
-export function selectMessage(posterId: string): Promise<Message[]> {
+export function selectLatestMessageByPoster(posterId: string): Promise<Message[]> {
     return database.query(`
         SELECT *
-        FROM ${process.env.DB_NAME}.messages
-        WHERE poster_id = ?
-        ORDER BY post_date DESC
-        LIMIT 1`,
+            FROM ${process.env.DB_NAME}.messages
+            WHERE poster_id = ?
+            ORDER BY post_date DESC
+            LIMIT 1`,
         [posterId]
     )
 }
@@ -32,8 +33,18 @@ export function selectMessage(posterId: string): Promise<Message[]> {
 export async function countPosts(): Promise<number> {
     const data = await database.query(`
         SELECT COUNT(id)
-        FROM graffiti.messages`
+            FROM graffiti.messages`
     )
 
     return data.length ? data[0]['COUNT(id)'] : 0
+}
+
+export async function selectTagsByName(names: string[]): Promise<Tag[]> {
+    const values = names.map(name => `'${name}'`).join(',')
+
+    return database.query(`
+        SELECT *
+            FROM ${process.env.DB_NAME}.tags
+            WHERE name in (${values})`
+    )
 }

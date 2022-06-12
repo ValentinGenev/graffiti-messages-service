@@ -1,9 +1,10 @@
 import dotenv from 'dotenv'
-import { insertMessage } from "../dal/insert"
-import { selectMessage } from "../dal/select"
+import { insertMessage, insertTags, relateTagsAndMessages } from "../dal/insert"
+import { selectLatestMessageByPoster, selectTagsByName } from "../dal/select"
 import { Message, PostMessageResp } from "../interfaces/IMessage"
-import { posterIsSpamming } from "../utilities/helper-functions"
+import { posterIsSpamming, sanitizeHtml } from "../utilities/helper-functions"
 import { ERRORS } from "../utilities/constants"
+import * as IRes from '../interfaces/IResponse'
 
 dotenv.config()
 
@@ -39,14 +40,17 @@ export async function createMessage(data: Message): Promise<PostMessageResp> {
     }
 
     data.message = sanitizeHtml(data.message)
-    await insertMessage(data)
-    // TODO: add tags insertions
+    const messageInsert = await insertMessage(data)
+
+    if (data.tags?.length) {
+        await relateTagsToMessage(data.tags, messageInsert.insertId)
+    }
 
     return { success: true, message: data }
 }
 
 export async function isSpam(posterId: string): Promise<boolean> {
-    const lastPost = await selectMessage(posterId)
+    const lastPost = await selectLatestMessageByPoster(posterId)
 
     if (lastPost.length === 1) {
         return posterIsSpamming(lastPost[0], Number(process.env.TIME_LIMIT))
@@ -55,16 +59,21 @@ export async function isSpam(posterId: string): Promise<boolean> {
     return false
 }
 
-export function sanitizeHtml(message: string): string {
-    const badTags = ['link', 'style', 'iframe', 'script', 'svg']
-    let result = message
-
-    for (const tag of badTags) {
-        const openingTag = new RegExp(`<${tag}[^>]*>`, 'ig')
-        const closingTag = new RegExp(`<\/${tag}[^>]*>`, 'ig')
-
-        result = result.replace(openingTag, '').replace(closingTag, '')
+export async function relateTagsToMessage(tags: string[], messageId: number): Promise<IRes.Response> {
+    if ((await handleTags(tags)).success) {
+        await relateTagsAndMessages(messageId, tags)
     }
 
-    return result
+    return { success: true }
+}
+
+export async function handleTags(tags: string[]): Promise<IRes.Response> {
+    const existingTags = (await selectTagsByName(tags)).map(tag => tag.name)
+    const newTags = tags.filter(tag => !existingTags.includes(tag))
+
+    if (newTags.length) {
+        await insertTags(newTags)
+    }
+
+    return { success: true }
 }
