@@ -1,6 +1,6 @@
 import dotenv from 'dotenv'
 import { insertMessage, insertTags, relateTagsAndMessages } from "../dal/insert"
-import { selectLatestMessageByPoster, selectTagsByName } from "../dal/select"
+import { selectLatestMessageByPoster, selectTagsByNames } from "../dal/select"
 import { Message, PostMessageResp } from "../interfaces/IMessage"
 import { posterIsSpamming, sanitizeHtml } from "../utilities/helper-functions"
 import { ERRORS } from "../utilities/constants"
@@ -68,7 +68,7 @@ export async function relateTagsToMessage(tags: string[], messageId: number): Pr
 }
 
 export async function handleTags(tags: string[]): Promise<IRes.Response> {
-    const existingTags = (await selectTagsByName(tags)).map(tag => tag.name)
+    const existingTags = (await selectTagsByNames(tags)).map(tag => tag.name)
     const newTags = tags.filter(tag => !existingTags.includes(tag))
 
     if (newTags.length) {
