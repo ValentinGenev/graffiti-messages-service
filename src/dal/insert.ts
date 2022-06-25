@@ -1,11 +1,12 @@
 import dotenv from 'dotenv'
+import { OkPacket } from 'mysql';
 import { database } from "..";
 import { Message } from "../interfaces/IMessage";
-import { selectTagsByName } from './select';
+import { selectTagsByNames } from './select';
 
 dotenv.config()
 
-export function insertMessage(data: Message): Promise<Record<string, any>> {
+export function insertMessage(data: Message): Promise<OkPacket> {
     return database.query(`
         INSERT
             INTO ${process.env.DB_NAME}.messages (poster_id, message)
@@ -24,9 +25,9 @@ export function insertTags(tags: string[]) {
 }
 
 export async function relateTagsAndMessages(messageId: number, tagNames: string[]):
-    Promise<Record<string, any>> {
+    Promise<OkPacket> {
 
-    const tagIds = (await selectTagsByName(tagNames)).map(tag => tag.id)
+    const tagIds = (await selectTagsByNames(tagNames)).map(tag => tag.id)
     const values = tagIds.map(tagId => `(${messageId}, ${tagId})`).join(',')
 
     return database.query(`

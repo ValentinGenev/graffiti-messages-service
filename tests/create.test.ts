@@ -4,7 +4,6 @@ import { Message } from '../src/interfaces/IMessage'
 import { createMessage, isSpam, relateTagsToMessage } from '../src/actions/create'
 import { selectLatestMessageByPoster } from '../src/dal/select'
 import { ERRORS } from '../src/utilities/constants'
-import { Tag } from '../src/interfaces/ITag'
 
 dotenv.config()
 

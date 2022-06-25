@@ -30,21 +30,47 @@ export function selectLatestMessageByPoster(posterId: string): Promise<Message[]
     )
 }
 
-export async function countPosts(): Promise<number> {
-    const data = await database.query(`
-        SELECT COUNT(id)
-            FROM graffiti.messages`
-    )
-
-    return data.length ? data[0]['COUNT(id)'] : 0
-}
-
-export async function selectTagsByName(names: string[]): Promise<Tag[]> {
+export async function selectTagsByNames(names: string[]): Promise<Tag[]> {
     const values = names.map(name => `'${name}'`).join(',')
 
     return database.query(`
         SELECT *
             FROM ${process.env.DB_NAME}.tags
-            WHERE name in (${values})`
+            WHERE name IN (${values})`
     )
+}
+
+export async function selectMessagesByTag(name: string): Promise<Message[]> {
+    return database.query(`
+        SELECT m.*
+            FROM ${process.env.DB_NAME}.tags t
+            JOIN ${process.env.DB_NAME}.messages_tags mt
+            ON t.id = mt.tag_id
+            INNER JOIN ${process.env.DB_NAME}.messages m
+            ON m.id = mt.message_id
+            WHERE t.name = ?`,
+        [name]
+    )
+}
+
+export async function selectTagsByMessage(id: number): Promise<Tag[]> {
+    return database.query(`
+        SELECT t.name
+            FROM graffiti.tags t
+            INNER JOIN graffiti.messages_tags mt
+            ON t.id = mt.tag_id
+            INNER JOIN graffiti.messages m
+            ON m.id = mt.message_id
+            WHERE m.id = ?`,
+        [id]
+    )
+}
+
+export async function countPosts(): Promise<number> {
+    const data = await database.query(`
+        SELECT COUNT(id)
+            FROM ${process.env.DB_NAME}.messages`
+    )
+
+    return data.length ? data[0]['COUNT(id)'] : 0
 }
