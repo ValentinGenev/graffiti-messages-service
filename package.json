@@ -9,6 +9,7 @@
     "start": "node ./dist/index.js",
     "dev": "nodemon ./src/index.ts",
     "test": "npx jest tests/",
+    "test-read": "npx jest read.test.ts",
     "test-database": "npx jest database.test.ts"
   },
   "repository": {
