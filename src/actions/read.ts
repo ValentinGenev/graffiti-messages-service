@@ -1,5 +1,5 @@
 import * as Dal from "../dal/select"
-import { GetMessageResp, GetMessagesReq, GetMessagesResp } from "../interfaces/IMessage";
+import { GetMessageResp, GetMessagesReq, GetMessagesResp, Message } from "../interfaces/IMessage";
 import * as IReq from "../interfaces/IRequest";
 import * as IRes from "../interfaces/IResponse";
 import { ERRORS } from "../utilities/constants";
@@ -14,7 +14,7 @@ export async function readMessages(request: GetMessagesReq): Promise<GetMessages
         postsPerPage: request.postsPerPage ?
             Number(request.postsPerPage) : DEFAULT_POSTS_PER_PAGE
     }
-    const messages = await Dal.selectMessages(pagination)
+    let messages = await Dal.selectMessages(pagination)
 
 
     if (messages.length === 0) {
@@ -25,6 +25,8 @@ export async function readMessages(request: GetMessagesReq): Promise<GetMessages
             }
         }
     }
+
+    messages = await getTagsOfMessages(messages)
 
     return {
         success: true,
@@ -80,4 +82,15 @@ async function getPaginationData(pagination: IReq.Pagination): Promise<IRes.Pagi
     }
 
     return paginationData
+}
+
+async function getTagsOfMessages(messages: Message[]): Promise<Message[]> {
+    const messagesWithTags = [...messages]
+
+    for (const message of messagesWithTags) {
+        if (message.id)
+            message.tags = (await Dal.selectTagsByMessage(message.id)).map(tag => tag.name)
+    }
+
+    return messagesWithTags
 }

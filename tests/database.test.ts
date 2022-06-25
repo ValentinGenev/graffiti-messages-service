@@ -11,38 +11,38 @@ describe('DAL tests:', () => {
     const tagNames = ['Test Label 0', 'Test Label 1']
     let messageInsert: OkPacket
 
-	test('insertMessage', async () => {
+	test('insertMessage()', async () => {
         messageInsert = await insertMessage({ poster_id: posterId, message: 'Hello, world!' })
         expect(messageInsert.affectedRows === 1).toBeTruthy()
 	})
 
-    test('insertTags', async () => {
+    test('insertTags()', async () => {
         const result = await insertTags(tagNames)
         expect(result.affectedRows === 2).toBeTruthy()
     })
-    test('selectTagsByNames', async () => {
+    test('selectTagsByNames()', async () => {
         const result = await selectTagsByNames(tagNames)
         expect(result.length === 2).toBeTruthy()
     })
-    test('selectTagsByNames fails with wrong tag', async () => {
+    test('selectTagsByNames fails with wrong tag()', async () => {
         const result = await selectTagsByNames(['Test Label 2'])
         expect(result.length).toBeFalsy()
     })
 
-    test('relateTagsAndMessages', async () => {
+    test('relateTagsAndMessages()', async () => {
         const result = await relateTagsAndMessages(messageInsert.insertId, tagNames)
         expect(result.affectedRows === 2).toBeTruthy()
     })
 
-    test('selectMessagesByTag', async () => {
+    test('selectMessagesByTag()', async () => {
         const result = await selectMessagesByTag(tagNames[0])
         expect(result[0].poster_id === posterId).toBeTruthy()
     })
-    test('selectMessagesByTag returns empty array with wrong tag', async () => {
+    test('selectMessagesByTag returns empty array with wrong tag()', async () => {
         const result = await selectMessagesByTag('nonExistingTag')
         expect(result.length).toBeFalsy()
     })
-    test('selectTagsByMessage', async () => {
+    test('selectTagsByMessage()', async () => {
         const result = await selectTagsByMessage(messageInsert.insertId)
         expect(result.length === 2).toBeTruthy()
     })

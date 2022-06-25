@@ -1,20 +1,22 @@
 import dotenv from 'dotenv'
+import { OkPacket } from 'mysql'
 import { database } from '../src/index'
 import { readMessages, readMessageByPoster } from '../src/actions/read'
+import { insertMessage, insertTags, relateTagsAndMessages } from '../src/dal/insert'
+import { Message } from '../src/interfaces/IMessage'
 import { ERRORS } from '../src/utilities/constants'
 
 dotenv.config()
 
 describe('Read service tests:', () => {
     const posterId = 'randomfingerprintstring_test_read'
+    const tagNames = ['Read Label 0', 'Read Label 1']
+    let messageInsert: OkPacket
 
     beforeAll(async () => {
-        await database.query(`
-            INSERT
-                INTO ${process.env.DB_NAME}.messages (poster_id, message)
-                VALUES (?, 'Test message');`,
-            [posterId]
-        )
+        messageInsert = await insertMessage({ poster_id: posterId, message: 'Test message' })
+        await insertTags(tagNames)
+        await relateTagsAndMessages(messageInsert.insertId, tagNames)
     })
 
 	test('readMessages()', async () => {
@@ -24,12 +26,30 @@ describe('Read service tests:', () => {
         expect(response.messages && response.messages.length > 0).toBeTruthy()
         expect(response.pagination && response.pagination.pageIndex === 1).toBeTruthy()
     })
+    test('readMessages() single message', async () => {
+        const response = await readMessages({ pageIndex: undefined, postsPerPage: undefined })
+        let testMessage: Message | undefined = undefined
+
+        if (response.messages) {
+            for (const message of response.messages) {
+                if (message.id === messageInsert.insertId) {
+                    testMessage = message
+                }
+            }
+        }
+
+        expect(typeof testMessage !== 'undefined').toBeTruthy()
+        expect(testMessage?.poster_id === posterId).toBeTruthy()
+        expect(testMessage?.message === 'Test message').toBeTruthy()
+        expect(testMessage?.tags && testMessage?.tags.indexOf(tagNames[0]) >= 0).toBeTruthy()
+    })
     test('readMessages() fails bad pageIndex', async () => {
         const response = await readMessages({ pageIndex: 999, postsPerPage: undefined })
 
         expect(response.success).toBeFalsy()
         expect(response.error && response.error.code === ERRORS.notFound).toBeTruthy()
     })
+
     test('readMessageByPoster()', async () => {
         const response = await readMessageByPoster(posterId)
 
@@ -53,11 +73,18 @@ describe('Read service tests:', () => {
     })
 
     afterAll(async () => {
+        const tagNamesString = tagNames.map(name => `'${name}'`).join(',')
+
         await database.query(`
             DELETE
                 FROM ${process.env.DB_NAME}.messages
                 WHERE poster_id = ?`,
             [posterId]
+        )
+        await database.query(`
+            DELETE
+                FROM ${process.env.DB_NAME}.tags
+                WHERE name IN (${tagNamesString})`
         )
         database.end()
     })
