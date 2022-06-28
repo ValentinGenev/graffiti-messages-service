@@ -1,3 +1,4 @@
+
 import * as Dal from "../dal/select"
 import { GetMessageResp, GetMessagesReq, GetMessagesResp, Message } from "../interfaces/IMessage";
 import * as IReq from "../interfaces/IRequest";
@@ -8,14 +9,18 @@ const DEFAULT_PAGE_INDEX = 1
 const DEFAULT_POSTS_PER_PAGE = 20
 
 export async function readMessages(request: GetMessagesReq): Promise<GetMessagesResp> {
-    const pagination = {
-        pageIndex: request.pageIndex && request.pageIndex.toString() !== '0' ?
-            Number(request.pageIndex) : DEFAULT_PAGE_INDEX,
-        postsPerPage: request.postsPerPage ?
-            Number(request.postsPerPage) : DEFAULT_POSTS_PER_PAGE
-    }
-    let messages = await Dal.selectMessages(pagination)
+    // TODO: limit the amount of messages per request
+    const pagination = parsePaginationData(request)
+    let filter: IReq.Filter = {}
+    // TODO: write tests for this filter
+    let messages = request.tag ?
+        await Dal.selectMessagesByTag(request.tag, pagination) :
+        await Dal.selectMessages(pagination)
 
+    // TODO: write tests for this filter as well
+    if (request.tag) {
+        filter.tag = request.tag
+    }
 
     if (messages.length === 0) {
         return {
@@ -31,12 +36,12 @@ export async function readMessages(request: GetMessagesReq): Promise<GetMessages
     return {
         success: true,
         messages,
-        pagination: await getPaginationData(pagination)
+        pagination: await getPaginationData(pagination, filter)
     }
 }
 
 export async function readMessageByPoster(id: string): Promise<GetMessageResp> {
-    if (id === '') {
+    if (!id) {
         return {
             success: false,
             error: {
@@ -60,11 +65,22 @@ export async function readMessageByPoster(id: string): Promise<GetMessageResp> {
     return { success: true, message: message[0] }
 }
 
-async function getPaginationData(pagination: IReq.Pagination): Promise<IRes.Pagination> {
+function parsePaginationData(request: GetMessagesReq) {
+    return {
+        pageIndex: request.pageIndex && request.pageIndex.toString() !== '0' ?
+            Number(request.pageIndex) : DEFAULT_PAGE_INDEX,
+        postsPerPage: request.postsPerPage ?
+            Number(request.postsPerPage) : DEFAULT_POSTS_PER_PAGE
+    }
+}
+
+// TODO: test this
+// TODO: think about abstraction; this started getting complex
+async function getPaginationData(pagination: IReq.Pagination, filter: IReq.Filter): Promise<IRes.Pagination> {
     const pageIndex = pagination.pageIndex ? pagination.pageIndex : DEFAULT_PAGE_INDEX
     const postsPerPage = pagination.postsPerPage ? pagination.postsPerPage : DEFAULT_POSTS_PER_PAGE
 
-    const postsCount = await Dal.countPosts()
+    const postsCount = await countPosts(filter)
     const pagesCount = Math.ceil(postsCount / postsPerPage)
     const isLastPage = pageIndex === pagesCount
     const lastPageCount = postsCount - (pagesCount - 1) * postsPerPage
@@ -82,6 +98,14 @@ async function getPaginationData(pagination: IReq.Pagination): Promise<IRes.Pagi
     }
 
     return paginationData
+}
+
+async function countPosts(filter?: IReq.Filter): Promise<number> {
+    if (filter?.tag) {
+        return await Dal.countPostsWithTag(filter.tag)
+    }
+
+    return await Dal.countPosts()
 }
 
 async function getTagsOfMessages(messages: Message[]): Promise<Message[]> {

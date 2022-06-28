@@ -1,28 +1,27 @@
 import dotenv from 'dotenv'
 import { database } from "..";
 import { Message } from "../interfaces/IMessage";
-import { Pagination } from "../interfaces/IRequest";
+import { Pagination, Filter } from "../interfaces/IRequest";
 import { Tag } from '../interfaces/ITag';
 
 dotenv.config()
 
-export function selectMessages(pagination: Pagination): Promise<Message[]> {
-    const offset = pagination.pageIndex && pagination.postsPerPage ?
-        (pagination.pageIndex - 1) * pagination.postsPerPage : 0
+const DB_NAME = process.env.DB_NAME
 
+export function selectMessages(pagination: Pagination): Promise<Message[]> {
     return database.query(`
         SELECT *
-            FROM ${process.env.DB_NAME}.messages
+            FROM ${DB_NAME}.messages
             ORDER BY id DESC
             LIMIT ?, ?`,
-        [offset, pagination.postsPerPage]
+        [getOffset(pagination), pagination.postsPerPage]
     )
 }
 
 export function selectLatestMessageByPoster(posterId: string): Promise<Message[]> {
     return database.query(`
         SELECT *
-            FROM ${process.env.DB_NAME}.messages
+            FROM ${DB_NAME}.messages
             WHERE poster_id = ?
             ORDER BY post_date DESC
             LIMIT 1`,
@@ -35,31 +34,33 @@ export async function selectTagsByNames(names: string[]): Promise<Tag[]> {
 
     return database.query(`
         SELECT *
-            FROM ${process.env.DB_NAME}.tags
+            FROM ${DB_NAME}.tags
             WHERE name IN (${values})`
     )
 }
 
-export async function selectMessagesByTag(name: string): Promise<Message[]> {
+export async function selectMessagesByTag(name: string, pagination: Pagination): Promise<Message[]> {
     return database.query(`
         SELECT m.*
-            FROM ${process.env.DB_NAME}.tags t
-            JOIN ${process.env.DB_NAME}.messages_tags mt
+            FROM ${DB_NAME}.tags t
+            JOIN ${DB_NAME}.messages_tags mt
             ON t.id = mt.tag_id
-            INNER JOIN ${process.env.DB_NAME}.messages m
+            INNER JOIN ${DB_NAME}.messages m
             ON m.id = mt.message_id
-            WHERE t.name = ?`,
-        [name]
+            WHERE t.name = ?
+            ORDER BY id DESC
+            LIMIT ?, ?`,
+        [name, getOffset(pagination), pagination.postsPerPage]
     )
 }
 
 export async function selectTagsByMessage(id: number): Promise<Tag[]> {
     return database.query(`
         SELECT t.name
-            FROM graffiti.tags t
-            INNER JOIN graffiti.messages_tags mt
+            FROM ${DB_NAME}.tags t
+            INNER JOIN ${DB_NAME}.messages_tags mt
             ON t.id = mt.tag_id
-            INNER JOIN graffiti.messages m
+            INNER JOIN ${DB_NAME}.messages m
             ON m.id = mt.message_id
             WHERE m.id = ?`,
         [id]
@@ -69,8 +70,28 @@ export async function selectTagsByMessage(id: number): Promise<Tag[]> {
 export async function countPosts(): Promise<number> {
     const data = await database.query(`
         SELECT COUNT(id)
-            FROM ${process.env.DB_NAME}.messages`
+            FROM ${DB_NAME}.messages`
     )
 
     return data.length ? data[0]['COUNT(id)'] : 0
+}
+
+export async function countPostsWithTag(tag: string) : Promise<number> {
+    const data = await database.query(`
+        SELECT COUNT(m.id)
+            FROM ${DB_NAME}.tags t
+            JOIN ${DB_NAME}.messages_tags mt
+            ON t.id = mt.tag_id
+            INNER JOIN ${DB_NAME}.messages m
+            ON m.id = mt.message_id
+            WHERE t.name = ?`,
+        [tag]
+    )
+
+    return data.length ? data[0]['COUNT(m.id)'] : 0
+}
+
+function getOffset(pagination: Pagination) {
+    return pagination.pageIndex && pagination.postsPerPage ?
+        (pagination.pageIndex - 1) * pagination.postsPerPage : 0
 }
