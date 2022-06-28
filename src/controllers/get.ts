@@ -1,28 +1,34 @@
-import { readMessages, readMessageByPoster } from "../actions/read"
+import { Request, Response } from "express"
+import {
+    readMessages,
+    readMessageByPoster
+} from "../actions/read"
+import { GetMessagesReq } from "../interfaces/IMessage"
+import { handleFailResponse } from "../utilities/responses"
 
-export async function getMessages(request: Record<string, any>, response: Record<string, any>): Promise<void> {
+export async function getMessages(request: Request, response: Response) {
     try {
-        response.json(await readMessages({
-            pageIndex: request.params.pageIndex,
-            postsPerPage: request.query.postsPerPage
-        }))
+        const messageRequest: GetMessagesReq = {
+            pageIndex: Number(request.params.pageIndex),
+            postsPerPage: Number(request.query.postsPerPage)
+        }
+
+        if (typeof request.query.tag === 'string') {
+            messageRequest.tag = request.query.tag
+        }
+
+        response.json(await readMessages(messageRequest))
     }
     catch (error) {
-        // TODO: figure a way to log errors
-        console.log(error)
-        response.json({ success: false })
+        handleFailResponse(error, response)
     }
 }
 
-// TODO: get messages by tag or tags
-
-export async function getMessage(request: Record<string, any>, response: Record<string, any>): Promise<void> {
+export async function getMessage(request: Request, response: Response) {
     try {
         response.json(await readMessageByPoster(request.params.posterId))
     }
     catch (error) {
-        // TODO: figure a way to log errors
-        console.log(error)
-        response.json({ success: false })
+        handleFailResponse(error, response)
     }
 }

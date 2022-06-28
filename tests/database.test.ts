@@ -16,6 +16,8 @@ describe('DAL tests:', () => {
         expect(messageInsert.affectedRows === 1).toBeTruthy()
 	})
 
+    // TODO: add selectMessages tests
+
     test('insertTags()', async () => {
         const result = await insertTags(tagNames)
         expect(result.affectedRows === 2).toBeTruthy()
@@ -35,11 +37,11 @@ describe('DAL tests:', () => {
     })
 
     test('selectMessagesByTag()', async () => {
-        const result = await selectMessagesByTag(tagNames[0])
+        const result = await selectMessagesByTag(tagNames[0], { pageIndex: 1, postsPerPage: 10 })
         expect(result[0].poster_id === posterId).toBeTruthy()
     })
     test('selectMessagesByTag returns empty array with wrong tag()', async () => {
-        const result = await selectMessagesByTag('nonExistingTag')
+        const result = await selectMessagesByTag('nonExistingTag', { pageIndex: 1, postsPerPage: 10 })
         expect(result.length).toBeFalsy()
     })
     test('selectTagsByMessage()', async () => {

@@ -13,7 +13,9 @@ export interface PostMessageResp extends IRes.Response {
     message?: Message
 }
 
-export interface GetMessagesReq extends IReq.Pagination { }
+export interface GetMessagesReq extends IReq.Pagination {
+    tag?: string
+}
 export interface GetMessagesResp extends IRes.Response {
     messages?: Message[]
     pagination?: IRes.Pagination

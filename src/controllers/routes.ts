@@ -1,14 +1,16 @@
 import dotenv from 'dotenv'
 import path from 'path'
+import { Request, Response } from "express"
 import { RestServer } from '../lib/rest'
 import { postMessage } from './post'
 import { getMessages, getMessage } from './get'
+import { handleFailResponse } from '../utilities/responses'
 
 dotenv.config()
 
 const REST_PATH = process.env.REST_PATH
 
-export function setRoutes(rest: RestServer): void {
+export function setRoutes(rest: RestServer) {
     const server = rest.getServer()
 
     server.get(`${REST_PATH}/`, documentation)
@@ -16,22 +18,19 @@ export function setRoutes(rest: RestServer): void {
     server.get(`${REST_PATH}/all`, getMessages)
     server.get(`${REST_PATH}/all/:pageIndex`, getMessages)
     server.get(`${REST_PATH}/last/:posterId`, getMessage)
-    
+
     server.post(`${REST_PATH}/new`, postMessage)
 }
 
-export function healthCheck(_request: Record<string, any>, response: Record<string, any>): void {
+export function healthCheck(_request: Request, response: Response) {
     response.json({ status: 'online' })
 }
 
-export function documentation(_request: Record<string, any>, response: Record<string, any>): void {
+export function documentation(_request: Request, response: Response) {
     try {
         response.sendFile(path.join(__dirname, '../../public/documentation.html'))
     }
     catch (error) {
-        // TODO: set different response codes
-        // TODO: figure a way to log errors
-        console.error(error)
-        response.json({ success: false })
-    } 
+        handleFailResponse(error, response)
+    }
 }
