@@ -1,5 +1,5 @@
 import dotenv from 'dotenv'
-import { OkPacket } from 'mysql'
+import mysql from 'mysql'
 import { insertMessage, insertTags, relateTagsAndMessages } from '../src/dal/insert'
 import { selectMessagesByTag, selectTagsByMessage, selectTagsByNames } from '../src/dal/select'
 import { database } from '../src/index'
@@ -8,8 +8,8 @@ dotenv.config()
 
 describe('DAL tests:', () => {
     const posterId = 'randomfingerprintstring_test_database'
-    const tagNames = ['Test Label 0', 'Test Label 1']
-    let messageInsert: OkPacket
+    const tagNames = ['Test Label 0', 'Test Label 1', "' or 1=1; drop table graffiti.messages; —"]
+    let messageInsert: mysql.OkPacket
 
 	test('insertMessage()', async () => {
         messageInsert = await insertMessage({ poster_id: posterId, message: 'Hello, world!' })
@@ -20,11 +20,11 @@ describe('DAL tests:', () => {
 
     test('insertTags()', async () => {
         const result = await insertTags(tagNames)
-        expect(result.affectedRows === 2).toBeTruthy()
+        expect(result.affectedRows === tagNames.length).toBeTruthy()
     })
     test('selectTagsByNames()', async () => {
         const result = await selectTagsByNames(tagNames)
-        expect(result.length === 2).toBeTruthy()
+        expect(result.length === tagNames.length).toBeTruthy()
     })
     test('selectTagsByNames fails with wrong tag()', async () => {
         const result = await selectTagsByNames(['Test Label 2'])
@@ -33,7 +33,7 @@ describe('DAL tests:', () => {
 
     test('relateTagsAndMessages()', async () => {
         const result = await relateTagsAndMessages(messageInsert.insertId, tagNames)
-        expect(result.affectedRows === 2).toBeTruthy()
+        expect(result.affectedRows === tagNames.length).toBeTruthy()
     })
 
     test('selectMessagesByTag()', async () => {
@@ -46,11 +46,11 @@ describe('DAL tests:', () => {
     })
     test('selectTagsByMessage()', async () => {
         const result = await selectTagsByMessage(messageInsert.insertId)
-        expect(result.length === 2).toBeTruthy()
+        expect(result.length === tagNames.length).toBeTruthy()
     })
 
     afterAll(async () => {
-        const tagNamesString = tagNames.map(name => `'${name}'`).join(',')
+        const tagNamesString = tagNames.map(name => mysql.escape(name)).join(',')
 
         await database.query(`
             DELETE
