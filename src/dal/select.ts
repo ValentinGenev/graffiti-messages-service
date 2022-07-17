@@ -1,7 +1,8 @@
 import dotenv from 'dotenv'
+import mysql from 'mysql'
 import { database } from "..";
 import { Message } from "../interfaces/IMessage";
-import { Pagination, Filter } from "../interfaces/IRequest";
+import { Pagination } from "../interfaces/IRequest";
 import { Tag } from '../interfaces/ITag';
 
 dotenv.config()
@@ -30,7 +31,7 @@ export function selectLatestMessageByPoster(posterId: string): Promise<Message[]
 }
 
 export async function selectTagsByNames(names: string[]): Promise<Tag[]> {
-    const values = names.map(name => `'${name}'`).join(',')
+    const values = names.map(name => mysql.escape(name)).join(',')
 
     return database.query(`
         SELECT *

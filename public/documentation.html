@@ -16,16 +16,50 @@
 
 <body>
     <h1>Sand Messages</h1>
-    <section>
+    <header>
         <h2>API documentation</h2>
-        <h3>GET endpoints</h3>
         <ul>
-            <li><a href="/api/messages/">/api/messages/</a></li>
-            <li><a href="/api/messages/health-check">/api/messages/health-check</a></li>
-            <li><a href="/api/messages/all">/api/messages/messages</a></li>
-            <li><a href="/api/messages/all/1/?postsPerPage=1">/api/messages/all/pageIndex/?postsPerPage</a></li>
-            <li><a href="/api/messages/last/hasedfingerprint">/api/messages/last/posterId</a></li>
+            <li><a href="#health-check"><span>GET</span> /api/messages/health-check</a></li>
+            <li><a href="#get-all"><span>GET</span> /api/messages/messages/all/{pageIndex}/?postsPerPage={number}&tag={name}</a></li>
+            <li><a href="#last"><span>GET</span> /api/messages/last/{poster_id}</a></li>
+            <li><a href="#post-all"><span>POST</span> /api/messages/messages</a></li>
         </ul>
+    </header>
+    <section id="get-all">
+        <h2><span>GET</span> all</h2>
+        <h3>Successful response:</h3>
+        <pre>
+        {
+            "success": true,
+            "messages": [
+                {
+                    "id": 1,
+                    "post_date": "2022-07-15T17:24:53.000Z",
+                    "poster_id": "51208eff3a7f6d18014890c142ffedcf",
+                    "poster": "undefined",
+                    "message": "Sed at cursus tellus indeed.",
+                    "tags": [
+                        "firstTagEver"
+                    ]
+                }
+            ],
+            "pagination": {
+                "pageIndex": 1,
+                "postsCount": 1,
+                "pagesCount": 1
+            }
+        }
+        </pre>
+        <h3>Failure response:</h3>
+        <pre>
+        {
+            "success": false,
+            "error": {
+                "code": "MISSING_DATA | TOO_MANY_REQUESTS | MAX_LENGTH_EXCEEDED",
+                "message": "Missing data: message"
+            }
+        }
+        </pre>
     </section>
 </body>
 
