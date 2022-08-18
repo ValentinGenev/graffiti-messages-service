@@ -15,11 +15,11 @@ export function setRoutes(rest: RestServer) {
 
     server.get(`${REST_PATH}/`, documentation)
     server.get(`${REST_PATH}/health-check`, healthCheck)
-    server.get(`${REST_PATH}/all`, getMessages)
-    server.get(`${REST_PATH}/all/:pageIndex`, getMessages)
-    server.get(`${REST_PATH}/last/:posterId`, getMessage)
+    server.get(`${REST_PATH}/messages`, getMessages)
+    server.get(`${REST_PATH}/messages/:pageIndex`, getMessages)
+    server.get(`${REST_PATH}/messages/:posterId/last`, getMessage)
 
-    server.post(`${REST_PATH}/new`, postMessage)
+    server.post(`${REST_PATH}/messages`, postMessage)
 }
 
 export function healthCheck(_request: Request, response: Response) {

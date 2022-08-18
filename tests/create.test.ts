@@ -1,7 +1,7 @@
 import dotenv from 'dotenv'
 import { database } from '../src'
 import { Message } from '../src/interfaces/IMessage'
-import { createMessage, isSpam, relateTagsToMessage } from '../src/actions/create'
+import { createMessage, isSpam, relateTagsToMessage } from '../src/services/create'
 import { selectLatestMessageByPoster } from '../src/dal/select'
 import { ERRORS } from '../src/utilities/constants'
 

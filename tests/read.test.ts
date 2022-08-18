@@ -1,7 +1,7 @@
 import dotenv from 'dotenv'
 import { OkPacket } from 'mysql'
 import { database } from '../src/index'
-import { readMessages, readMessageByPoster } from '../src/actions/read'
+import { readMessages, readMessageByPoster } from '../src/services/read'
 import { insertMessage, insertTags, relateTagsAndMessages } from '../src/dal/insert'
 import { Message } from '../src/interfaces/IMessage'
 import { ERRORS } from '../src/utilities/constants'
