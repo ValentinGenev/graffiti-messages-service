@@ -2,7 +2,7 @@ import { Request, Response } from "express"
 import {
     readMessages,
     readMessageByPoster
-} from "../actions/read"
+} from "../services/read"
 import { GetMessagesReq } from "../interfaces/IMessage"
 import { handleFailResponse } from "../utilities/responses"
 
