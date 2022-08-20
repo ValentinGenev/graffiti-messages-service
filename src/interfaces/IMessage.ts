@@ -14,7 +14,7 @@ export interface PostMessageResp extends IRes.Response {
 }
 
 export interface GetMessagesReq extends IReq.Pagination {
-    tag?: string
+    filter?: Record<string, any>
 }
 export interface GetMessagesResp extends IRes.Response {
     messages?: Message[],

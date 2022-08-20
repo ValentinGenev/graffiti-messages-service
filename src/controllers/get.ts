@@ -1,23 +1,23 @@
 import { Request, Response } from "express"
-import {
-    readMessages,
-    readMessageByPoster
-} from "../services/read"
+import { readMessages, readMessageByPoster } from "../services/read"
 import { GetMessagesReq } from "../interfaces/IMessage"
 import { handleFailResponse } from "../utilities/responses"
 
 export async function getMessages(request: Request, response: Response) {
     try {
-        const messageRequest: GetMessagesReq = {
+        const requestBody: GetMessagesReq = {
             pageIndex: Number(request.params.pageIndex),
             postsPerPage: Number(request.query.postsPerPage)
         }
 
-        if (typeof request.query.tag === 'string') {
-            messageRequest.tag = request.query.tag
-        }
+        // if (typeof request.query.tag === 'string') {
+        //     requestBody.tag = request.query.tag
+        // }
 
-        response.json(await readMessages(messageRequest))
+        // TODO: check if there are query params
+        requestBody.filter = request.query
+
+        response.json(await readMessages(requestBody))
     }
     catch (error) {
         handleFailResponse(error, response)

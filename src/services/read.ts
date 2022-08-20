@@ -13,13 +13,13 @@ export async function readMessages(request: GetMessagesReq): Promise<GetMessages
     const pagination = parsePaginationData(request)
     let filter: IReq.Filter = {}
     // TODO: write tests for this filter
-    let messages = request.tag ?
-        await Dal.selectMessagesByTag(request.tag, pagination) :
+    let messages = request?.filter?.tag ?
+        await Dal.selectMessagesByTag(request.filter.tag, pagination) :
         await Dal.selectMessages(pagination)
 
     // TODO: write tests for this filter as well
-    if (request.tag) {
-        filter.tag = request.tag
+    if (request.filter?.tag) {
+        filter.tag = request.filter.tag
     }
 
     if (messages.length === 0) {
