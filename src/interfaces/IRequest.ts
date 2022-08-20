@@ -1,5 +1,5 @@
 export type Pagination = {
-    pageIndex: number | undefined
+    pageIndex: number | undefined,
     postsPerPage: number | undefined
 }
 

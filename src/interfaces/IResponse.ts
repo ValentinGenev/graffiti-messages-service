@@ -1,17 +1,17 @@
 export type Error = {
-    code: string
+    code: string,
     message?: string
 }
 
 export type Response = {
-    success: boolean
+    success: boolean,
     error?: Error
 }
 
 export type Pagination = {
-    pageIndex: number
-    postsCount: number
-    pagesCount: number
-    nextPageIndex?: number
+    pageIndex: number,
+    postsCount: number,
+    pagesCount: number,
+    nextPageIndex?: number,
     previousPageIndex?: number
 }

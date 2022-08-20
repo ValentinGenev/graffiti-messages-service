@@ -1,31 +1,38 @@
 import dotenv from 'dotenv'
-import * as libDatabase from './lib/database'
-import * as libRest from './lib/rest'
+import mysql from 'mysql'
+import express from 'express'
+
+import { MySqlDatabase } from './lib/database'
+import { RestServer } from './lib/rest'
 import * as dalCreate from './dal/create'
 import * as dalSettings from './dal/settings'
 import * as router from './controllers/routes'
+import { useBodyParser } from './utilities/helper-functions'
 
 dotenv.config()
+const { env } = process
 
-export const database = new libDatabase.MySqlDatabase({
-    host: process.env.DB_HOST,
-    port: Number(process.env.DB_PORT),
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
+export const database = new MySqlDatabase(mysql.createConnection({
+    host: env.DB_HOST,
+    port: Number(env.DB_PORT),
+    user: env.DB_USER,
+    password: env.DB_PASSWORD,
+    database: env.DB_NAME,
     multipleStatements: true
-})
-export const rest = new libRest.RestServer({
-    port: process.env.REST_PORT
+}))
+export const rest = new RestServer({
+    server: express(),
+    host: env.REST_HOST,
+    port: Number(env.REST_PORT)
 })
 
-libDatabase.connect(database)
+database.connect()
 dalCreate.createTables(database)
 dalSettings.syncZoneWithNode(database)
 
-if (process.env.NODE_ENV !== 'test') {
-    libRest.useBodyParser(rest)
-    libRest.start(rest)
+if (env.NODE_ENV !== 'test') {
+    useBodyParser(rest)
+    rest.start()
     router.setRoutes(rest)
 }
 

@@ -1,36 +1,37 @@
-import express from 'express'
-import bodyParser from 'body-parser'
-
 interface ServerConfiguration {
-    port?: string
+    server: any,
+    host: string | undefined,
+    port: number | undefined
 }
 
 export class RestServer {
-    private server: express.Express
-    private port: string | undefined
+    private server
+    private host: string
+    private port: number
 
     constructor(configuration: ServerConfiguration) {
-        this.port = configuration.port
-        this.server = express()
+        this.server = configuration.server
+        this.host = configuration.host ? configuration.host : 'localhost'
+        this.port = configuration.port ? configuration.port : 5000
     }
 
-    public getServer(): express.Express {
+    getServer() {
         return this.server
     }
-    public getPort(): string | undefined {
+    getPort() {
         return this.port
     }
-}
+    getHost() {
+        return this.host
+    }
 
-export function useBodyParser(rest: RestServer): void {
-    rest.getServer().use(bodyParser.json())
-}
+    start(): void {
+        const server = this.getServer()
+        const host = this.getHost()
+        const port = this.getPort()
 
-export function start(rest: RestServer): void {
-    const server = rest.getServer()
-    const port = rest.getPort() ? rest.getPort() : '5000'
-
-    server.listen(port, () => {
-        console.log(`Server listening on: localhost:${port}`)
-    })
+        server.listen(port, () => {
+            console.log(`Server listening on: ${host}:${port}`)
+        })
+    }
 }
