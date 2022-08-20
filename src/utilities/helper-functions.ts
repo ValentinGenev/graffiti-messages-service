@@ -1,4 +1,6 @@
+import bodyParser from "body-parser";
 import { Message } from "../interfaces/IMessage";
+import { RestServer } from "../lib/rest";
 
 /**
  * @param timeLimit default is 2 minutes in ms
@@ -29,4 +31,8 @@ export function sanitizeHtml(message: string): string {
  */
 export function convertUnixToDbTime(unix: number): string {
     return new Date(unix).toISOString()
+}
+
+export function useBodyParser(rest: RestServer): void {
+    rest.getServer().use(bodyParser.json())
 }
