@@ -36,3 +36,7 @@ export function convertUnixToDbTime(unix: number): string {
 export function useBodyParser(rest: RestServer): void {
     rest.getServer().use(bodyParser.json())
 }
+
+export function isBlank(target: string | null | undefined) {
+    return !target && target?.toString().trim() !== ''
+}
