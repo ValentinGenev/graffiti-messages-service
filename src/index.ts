@@ -2,12 +2,12 @@ import dotenv from 'dotenv'
 import mysql from 'mysql'
 import express from 'express'
 
+import { useBodyParser } from './utilities/helper-functions'
 import { MySqlDatabase } from './lib/database'
 import { RestServer } from './lib/rest'
 import * as dalCreate from './dal/create'
 import * as dalSettings from './dal/settings'
 import * as router from './controllers/routes'
-import { useBodyParser } from './utilities/helper-functions'
 
 dotenv.config()
 const { env } = process
