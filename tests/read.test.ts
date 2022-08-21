@@ -4,7 +4,7 @@ import { database } from '../src/index'
 import { readMessages, readMessageByPoster } from '../src/services/read'
 import { insertMessage, insertTags, relateTagsAndMessages } from '../src/dal/insert'
 import { Message } from '../src/interfaces/IMessage'
-import { ERRORS } from '../src/utilities/constants'
+import { Codes } from '../src/utilities/http-responses'
 
 dotenv.config()
 
@@ -20,14 +20,14 @@ describe('Read service tests:', () => {
     })
 
 	test('readMessages()', async () => {
-        const response = await readMessages({ pageIndex: undefined, postsPerPage: undefined })
+        const response = await readMessages({ query: { } })
 
         expect(response.success).toBeTruthy()
         expect(response.messages && response.messages.length > 0).toBeTruthy()
         expect(response.pagination && response.pagination.pageIndex === 1).toBeTruthy()
     })
     test('readMessages() single message', async () => {
-        const response = await readMessages({ pageIndex: undefined, postsPerPage: undefined })
+        const response = await readMessages({ query: { } })
         let testMessage: Message | undefined = undefined
 
         if (response.messages) {
@@ -44,10 +44,10 @@ describe('Read service tests:', () => {
         expect(testMessage?.tags && testMessage?.tags.indexOf(tagNames[0]) >= 0).toBeTruthy()
     })
     test('readMessages() fails bad pageIndex', async () => {
-        const response = await readMessages({ pageIndex: 999, postsPerPage: undefined })
+        const response = await readMessages({ query: { pageIndex: '999', postsPerPage: undefined } })
 
         expect(response.success).toBeFalsy()
-        expect(response.error && response.error.code === ERRORS.notFound).toBeTruthy()
+        expect(response.error && response.error.code === Codes.NotFound).toBeTruthy()
     })
 
     test('readMessageByPoster()', async () => {
@@ -62,14 +62,14 @@ describe('Read service tests:', () => {
 
         expect(response.success).toBeFalsy()
         expect(response.error).toBeDefined()
-        expect(response.error && response.error.code === ERRORS.notFound).toBeTruthy()
+        expect(response.error && response.error.code === Codes.NotFound).toBeTruthy()
     })
     test('readMessageByPoster() fails without posterId', async () => {
         const response = await readMessageByPoster('')
 
         expect(response.success).toBeFalsy()
         expect(response.error).toBeDefined()
-        expect(response.error && response.error.code === ERRORS.missingData).toBeTruthy()
+        expect(response.error && response.error.code === Codes.MissingData).toBeTruthy()
     })
 
     afterAll(async () => {
