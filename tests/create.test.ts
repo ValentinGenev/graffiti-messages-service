@@ -1,8 +1,9 @@
 import dotenv from 'dotenv'
 import { database } from '../src'
 import { Message } from '../src/interfaces/IMessage'
-import { createMessage, isSpam, relateTagsToMessage } from '../src/services/create'
 import { selectLatestMessageByPoster } from '../src/dal/select'
+import * as Messages from '../src/services/messages'
+import * as Tags from '../src/services/tags'
 import { Codes } from '../src/utilities/http-responses'
 
 dotenv.config()
@@ -14,23 +15,23 @@ describe('Create service tests:', () => {
     }
     const tagNames = ['label 0', 'label 1', 'label 2']
 
-    test('createMessage()', async () => {
-        const response = await createMessage(message)
+    test('create()', async () => {
+        const response = await Messages.create(message)
 
         expect(response.success).toBeTruthy()
         expect(response.message).toBeDefined()
         expect(response.message && response.message.message === 'Test message').toBeTruthy()
     })
-    test('createMessage() fails within the spam timeout', async () => {
-        const response = await createMessage(message)
+    test('create() fails within the spam timeout', async () => {
+        const response = await Messages.create(message)
 
         expect(response.success).toBeFalsy()
         expect(response.message).toBeUndefined()
         expect(response.error && response.error.code === Codes.TooManyRequests).toBeTruthy()
     })
-    test('createMessage() fails without message', async () => {
+    test('create() fails without message', async () => {
         message.message = ''
-        const response = await createMessage(message)
+        const response = await Messages.create(message)
 
         expect(response.success).toBeFalsy()
         expect(response.message).toBeUndefined()
@@ -38,14 +39,14 @@ describe('Create service tests:', () => {
     })
 
     test('isSpam()', async () => {
-        expect(await isSpam(message.poster_id)).toBeTruthy()
+        expect(await Messages.isSpam(message.poster_id)).toBeTruthy()
     })
 
-    test('relateTagsToMessage', async () => {
+    test('relateToMessage', async () => {
         const lastPost = await selectLatestMessageByPoster(message.poster_id)
 
         if (typeof lastPost[0].id !== 'undefined') {
-            const response = await relateTagsToMessage(tagNames, lastPost[0].id)
+            const response = await Tags.relateToMessage(tagNames, lastPost[0].id)
 
             expect(response.success)
         }
