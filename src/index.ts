@@ -7,7 +7,7 @@ import { MySqlDatabase } from './lib/database'
 import { RestServer } from './lib/rest'
 import * as dalCreate from './dal/create'
 import * as dalSettings from './dal/settings'
-import * as router from './controllers/routes'
+import * as router from './routes'
 
 dotenv.config()
 const { env } = process

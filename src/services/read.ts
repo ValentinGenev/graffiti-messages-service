@@ -1,9 +1,9 @@
 import * as Dal from "../dal/select"
 import { getPaginationData, parsePaginationData } from "./pagination";
-import { GetMessageResp, GetMessagesResp, Message } from "../interfaces/IMessage";
-import { ERRORS } from "../utilities/constants";
+import { GetMessageResp, GetMessagesReq, GetMessagesResp, Message } from "../interfaces/IMessage";
+import { Codes, MESSAGES } from "../utilities/http-responses";
 
-export async function readMessages(request: Record<string, any>): Promise<GetMessagesResp> {
+export async function readMessages(request: GetMessagesReq): Promise<GetMessagesResp> {
     const { query } = request;
     const pagination = parsePaginationData(query)
     let messages = query.tag ?
@@ -14,7 +14,7 @@ export async function readMessages(request: Record<string, any>): Promise<GetMes
         return {
             success: false,
             error: {
-                code: ERRORS.notFound
+                code: Codes.NotFound
             }
         }
     }
@@ -34,8 +34,8 @@ export async function readMessageByPoster(id: string): Promise<GetMessageResp> {
         return {
             success: false,
             error: {
-                code: ERRORS.missingData,
-                message: 'Missing data: id'
+                code: Codes.MissingData,
+                message: MESSAGES.missingData('id')
             }
         }
     }
@@ -46,7 +46,7 @@ export async function readMessageByPoster(id: string): Promise<GetMessageResp> {
         return {
             success: false,
             error: {
-                code: ERRORS.notFound
+                code: Codes.NotFound
             }
         }
     }

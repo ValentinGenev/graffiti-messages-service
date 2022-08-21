@@ -3,7 +3,7 @@ import { database } from '../src'
 import { Message } from '../src/interfaces/IMessage'
 import { createMessage, isSpam, relateTagsToMessage } from '../src/services/create'
 import { selectLatestMessageByPoster } from '../src/dal/select'
-import { ERRORS } from '../src/utilities/constants'
+import { Codes } from '../src/utilities/http-responses'
 
 dotenv.config()
 
@@ -26,7 +26,7 @@ describe('Create service tests:', () => {
 
         expect(response.success).toBeFalsy()
         expect(response.message).toBeUndefined()
-        expect(response.error && response.error.code === ERRORS.tooManyRequests).toBeTruthy()
+        expect(response.error && response.error.code === Codes.TooManyRequests).toBeTruthy()
     })
     test('createMessage() fails without message', async () => {
         message.message = ''
@@ -34,7 +34,7 @@ describe('Create service tests:', () => {
 
         expect(response.success).toBeFalsy()
         expect(response.message).toBeUndefined()
-        expect(response.error && response.error.code === ERRORS.missingData).toBeTruthy()
+        expect(response.error && response.error.code === Codes.MissingData).toBeTruthy()
     })
 
     test('isSpam()', async () => {

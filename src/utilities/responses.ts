@@ -1,9 +1,25 @@
-import { Response } from "express"
+import { Response } from '../interfaces/IResponse'
+import { STATUSES, Codes, MESSAGES } from './http-responses'
 
-export function handleFailResponse(error: any, response: Response) {
-    // TODO: figure a way to log errors
-    // TODO: get the HTTP status and code from the response
+export function getStatus(response: Response, code: Codes = Codes.Ok): number {
+    return response.error ? STATUSES[response.error.code] : STATUSES[code]
+}
 
-    console.log(error)
-    response.json({ success: false })
+export function handleInternalError(error: any, response: Record<string, any>) {
+    storeErrorInLog(error)
+
+    const body: Response = {
+        success: false,
+        error: {
+            code: Codes.InternalServerError,
+            message: MESSAGES.internalServerError
+        }
+    }
+
+    response.status(STATUSES[Codes.InternalServerError])
+    response.json(body)
+}
+
+function storeErrorInLog(error: any) {
+    // TODO: store the actual error in an error log
 }

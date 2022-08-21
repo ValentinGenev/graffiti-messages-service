@@ -1,4 +1,4 @@
-import * as IRes from './IResponse'
+import { Response, Pagination } from './IResponse'
 
 export type Message = {
     id?: number,
@@ -8,15 +8,31 @@ export type Message = {
     tags?: string[]
 }
 
-export interface PostMessageResp extends IRes.Response {
+export interface GetMessagesReq {
+    query: {
+        pageIndex?: string | null,
+        postsPerPage?: string | null,
+        tag?: string | null
+    }
+}
+export interface GetMessagesResp extends Response {
+    messages?: Message[],
+    pagination?: Pagination
+}
+
+export interface GetMessageReq {
+    params: {
+        poster_id: string
+    }
+}
+export interface GetMessageResp extends Response {
     message?: Message
 }
 
-export interface GetMessagesResp extends IRes.Response {
-    messages?: Message[],
-    pagination?: IRes.Pagination
+export interface PostMessageReq {
+    body: Message,
+    header: (arg0: string) => any
 }
-
-export interface GetMessageResp extends IRes.Response {
+export interface PostMessageResp extends Response {
     message?: Message
 }

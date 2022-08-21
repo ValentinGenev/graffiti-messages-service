@@ -3,7 +3,7 @@ import { insertMessage, insertTags, relateTagsAndMessages } from "../dal/insert"
 import { selectLatestMessageByPoster, selectTagsByNames } from "../dal/select"
 import { Message, PostMessageResp } from "../interfaces/IMessage"
 import { posterIsSpamming, sanitizeHtml } from "../utilities/helper-functions"
-import { ERRORS } from "../utilities/constants"
+import { Codes, MESSAGES } from "../utilities/http-responses"
 import * as IRes from '../interfaces/IResponse'
 
 dotenv.config()
@@ -13,8 +13,8 @@ export async function createMessage(data: Message): Promise<PostMessageResp> {
         return {
             success: false,
             error: {
-                code: ERRORS.missingData,
-                message: 'Missing data: message'
+                code: Codes.MissingData,
+                message: MESSAGES.missingData('message')
             }
         }
     }
@@ -23,8 +23,8 @@ export async function createMessage(data: Message): Promise<PostMessageResp> {
         return {
             success: false,
             error: {
-                code: ERRORS.tooManyRequests,
-                message: `You need to wait ${Number(process.env.TIME_LIMIT) / 60000} minutes before your next post`
+                code: Codes.TooManyRequests,
+                message: MESSAGES.tooManyRequests(Number(process.env.TIME_LIMIT) / 60000)
             }
         }
     }
@@ -33,8 +33,8 @@ export async function createMessage(data: Message): Promise<PostMessageResp> {
         return {
             success: false,
             error: {
-                code: ERRORS.maxLengthExceeded,
-                message: `Your message exceeds the maximum message length`
+                code: Codes.MaxLengthExceeded,
+                message: MESSAGES.maxLengthExceeded
             }
         }
     }

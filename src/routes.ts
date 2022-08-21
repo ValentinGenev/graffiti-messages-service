@@ -1,10 +1,9 @@
 import dotenv from 'dotenv'
 import path from 'path'
 import { Request, Response } from "express"
-import { RestServer } from '../lib/rest'
-import { postMessage } from './post'
-import { getMessages, getMessage } from './get'
-import { handleFailResponse } from '../utilities/responses'
+import { RestServer } from './lib/rest'
+import { getMessages, getMessage, postMessage } from './controllers/messages'
+import { handleInternalError } from './utilities/responses'
 
 dotenv.config()
 
@@ -16,7 +15,7 @@ export function setRoutes(rest: RestServer) {
     server.get(`${REST_PATH}/`, documentation)
     server.get(`${REST_PATH}/health-check`, healthCheck)
     server.get(`${REST_PATH}/messages`, getMessages)
-    server.get(`${REST_PATH}/messages/:posterId/last`, getMessage)
+    server.get(`${REST_PATH}/messages/:poster_id/last`, getMessage)
 
     server.post(`${REST_PATH}/messages`, postMessage)
 }
@@ -30,6 +29,6 @@ export function documentation(_request: Request, response: Response) {
         response.sendFile(path.join(__dirname, '../../public/documentation.html'))
     }
     catch (error) {
-        handleFailResponse(error, response)
+        handleInternalError(error, response)
     }
 }
