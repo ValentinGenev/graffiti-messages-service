@@ -1,9 +1,9 @@
 import dotenv from 'dotenv'
 import { OkPacket } from 'mysql'
 import { database } from '../src/index'
-import { readMessages, readMessageByPoster } from '../src/services/read'
-import { insertMessage, insertTags, relateTagsAndMessages } from '../src/dal/insert'
 import { Message } from '../src/interfaces/IMessage'
+import * as Messages from '../src/services/messages'
+import { insertMessage, insertTags, relateTagsAndMessages } from '../src/dal/insert'
 import { Codes } from '../src/utilities/http-responses'
 
 dotenv.config()
@@ -19,15 +19,15 @@ describe('Read service tests:', () => {
         await relateTagsAndMessages(messageInsert.insertId, tagNames)
     })
 
-	test('readMessages()', async () => {
-        const response = await readMessages({ query: { } })
+	test('getAll()', async () => {
+        const response = await Messages.getAll({ query: { } })
 
         expect(response.success).toBeTruthy()
         expect(response.messages && response.messages.length > 0).toBeTruthy()
         expect(response.pagination && response.pagination.pageIndex === 1).toBeTruthy()
     })
-    test('readMessages() single message', async () => {
-        const response = await readMessages({ query: { } })
+    test('getAll() single message', async () => {
+        const response = await Messages.getAll({ query: { } })
         let testMessage: Message | undefined = undefined
 
         if (response.messages) {
@@ -43,29 +43,29 @@ describe('Read service tests:', () => {
         expect(testMessage?.message === 'Test message').toBeTruthy()
         expect(testMessage?.tags && testMessage?.tags.indexOf(tagNames[0]) >= 0).toBeTruthy()
     })
-    test('readMessages() fails bad pageIndex', async () => {
-        const response = await readMessages({ query: { pageIndex: '999', postsPerPage: undefined } })
+    test('getAll() fails bad pageIndex', async () => {
+        const response = await Messages.getAll({ query: { pageIndex: '999', postsPerPage: undefined } })
 
         expect(response.success).toBeFalsy()
         expect(response.error && response.error.code === Codes.NotFound).toBeTruthy()
     })
 
-    test('readMessageByPoster()', async () => {
-        const response = await readMessageByPoster(posterId)
+    test('getByPoster()', async () => {
+        const response = await Messages.getByPoster(posterId)
 
         expect(response.success).toBeTruthy()
         expect(response.message).toBeDefined()
         expect(response.message && response.message.poster_id === posterId).toBeTruthy()
     })
-    test('readMessageByPoster() fails with bad posterId', async () => {
-        const response = await readMessageByPoster('badposterid')
+    test('getByPoster() fails with bad posterId', async () => {
+        const response = await Messages.getByPoster('badposterid')
 
         expect(response.success).toBeFalsy()
         expect(response.error).toBeDefined()
         expect(response.error && response.error.code === Codes.NotFound).toBeTruthy()
     })
-    test('readMessageByPoster() fails without posterId', async () => {
-        const response = await readMessageByPoster('')
+    test('getByPoster() fails without posterId', async () => {
+        const response = await Messages.getByPoster('')
 
         expect(response.success).toBeFalsy()
         expect(response.error).toBeDefined()
