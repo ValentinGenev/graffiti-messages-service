@@ -41,6 +41,9 @@ async function countPosts(query: Record<string, any>): Promise<number> {
     if (!isBlank(query.tag)) {
         return await Dal.countPostsWithTag(query.tag)
     }
+    if (!isBlank(query.posterId)) {
+        return await Dal.countPostsByPosterId(query.posterId)
+    }
 
     return await Dal.countPosts()
 }

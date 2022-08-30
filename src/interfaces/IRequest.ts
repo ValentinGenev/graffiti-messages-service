@@ -3,6 +3,7 @@ export type Pagination = {
     postsPerPage: number
 }
 
-export type Filter = {
-    tag?: string
+export interface Filter extends Pagination {
+    tag?: string,
+    posterId?: string,
 }

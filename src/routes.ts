@@ -2,7 +2,7 @@ import dotenv from 'dotenv'
 import path from 'path'
 import { Request, Response } from "express"
 import { RestServer } from './lib/rest'
-import { getMessages, getMessage, postMessage } from './controllers/messages'
+import { getMessages, postMessage } from './controllers/messages'
 import { handleInternalError } from './utilities/responses'
 
 dotenv.config()
@@ -15,7 +15,6 @@ export function setRoutes(rest: RestServer) {
     server.get(`${REST_PATH}/`, documentation)
     server.get(`${REST_PATH}/health-check`, healthCheck)
     server.get(`${REST_PATH}/messages`, getMessages)
-    server.get(`${REST_PATH}/messages/:poster_id/last`, getMessage)
 
     server.post(`${REST_PATH}/messages`, postMessage)
 }
