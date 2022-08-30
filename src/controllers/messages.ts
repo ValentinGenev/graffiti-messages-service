@@ -1,23 +1,30 @@
-import { GetMessageReq, GetMessagesReq, PostMessageReq } from "../interfaces/IMessage"
+import { GetMessagesReq, PostMessageReq } from "../interfaces/IMessage"
+import { Response } from '../interfaces/IResponse'
 import * as Messages from "../services/messages"
+import { isBlank } from "../utilities/helper-functions"
 import { Codes } from "../utilities/http-responses"
 import { getStatus, handleInternalError } from "../utilities/responses"
 
 export async function getMessages(request: GetMessagesReq, response: Record<string, any>) {
     try {
-        const body = await Messages.getAll(request)
+        const { query } = request
+        let body: Response = {
+            success: false,
+            error: { code: Codes.InternalServerError }
+        }
 
-        response.status(getStatus(body, Codes.Ok))
-        response.json(body)
-    }
-    catch (error) {
-        handleInternalError(error, response)
-    }
-}
-
-export async function getMessage(request: GetMessageReq, response: Record<string, any>) {
-    try {
-        const body = await Messages.getByPoster(request.params.poster_id)
+        if (!isBlank(query.tag) && !isBlank(query.posterId)) {
+            // TODO: roll the biggest rock
+        }
+        else if (!isBlank(query.tag)) {
+            body = await Messages.getAllByTag(query)
+        }
+        else if (!isBlank(query.posterId)) {
+            body = await Messages.getAllByPosterId(query)
+        }
+        else {
+            body = await Messages.getAll(query)
+        }
 
         response.status(getStatus(body, Codes.Ok))
         response.json(body)

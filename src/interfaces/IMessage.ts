@@ -1,3 +1,4 @@
+import { Filter } from './IRequest'
 import { Response, Pagination } from './IResponse'
 
 export type Message = {
@@ -9,24 +10,11 @@ export type Message = {
 }
 
 export interface GetMessagesReq {
-    query: {
-        pageIndex?: string | null,
-        postsPerPage?: string | null,
-        tag?: string | null
-    }
+    query: Filter
 }
 export interface GetMessagesResp extends Response {
     messages?: Message[],
     pagination?: Pagination
-}
-
-export interface GetMessageReq {
-    params: {
-        poster_id: string
-    }
-}
-export interface GetMessageResp extends Response {
-    message?: Message
 }
 
 export interface PostMessageReq {

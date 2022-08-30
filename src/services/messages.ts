@@ -1,12 +1,13 @@
 import dotenv from 'dotenv'
-import { selectMessages, selectMessagesByTag } from "../dal/select"
+import { selectAllByPoster, selectMessages, selectMessagesByTag } from "../dal/select"
 import { insertMessage } from '../dal/insert'
 import { selectLatestMessageByPoster } from '../dal/select'
-import { GetMessageResp, GetMessagesReq, GetMessagesResp, Message, PostMessageResp } from '../interfaces/IMessage'
+import { Message, PostMessageResp, GetMessagesResp } from '../interfaces/IMessage'
 import { posterIsSpamming, sanitizeHtml } from '../utilities/helper-functions'
 import { Codes, MESSAGES } from '../utilities/http-responses'
 import { getPaginationData, parsePaginationData } from "./pagination";
 import * as Tags from './tags'
+import { Filter } from '../interfaces/IRequest'
 
 dotenv.config()
 
@@ -61,12 +62,13 @@ export async function isSpam(posterId: string): Promise<boolean> {
     return false
 }
 
-export async function getAll(request: GetMessagesReq): Promise<GetMessagesResp> {
-    const { query } = request;
-    const pagination = parsePaginationData(query)
-    let messages = query.tag ?
-        await selectMessagesByTag(query.tag, pagination) :
-        await selectMessages(pagination)
+export async function getAllByTag(filter: Filter): Promise<GetMessagesResp> {
+    const pagination = parsePaginationData(filter);
+    let messages: Message[] = []
+
+    if (filter.tag) {
+        messages = await selectMessagesByTag(filter.tag, pagination)
+    }
 
     if (messages.length === 0) {
         return {
@@ -82,24 +84,19 @@ export async function getAll(request: GetMessagesReq): Promise<GetMessagesResp> 
     return {
         success: true,
         messages,
-        pagination: await getPaginationData(pagination, query)
+        pagination: await getPaginationData(pagination, filter)
     }
 }
 
-export async function getByPoster(id: string): Promise<GetMessageResp> {
-    if (!id) {
-        return {
-            success: false,
-            error: {
-                code: Codes.MissingData,
-                message: MESSAGES.missingData('id')
-            }
-        }
+export async function getAllByPosterId(filter: Filter): Promise<GetMessagesResp> {
+    const pagination = parsePaginationData(filter);
+    let messages: Message[] = []
+
+    if (filter.posterId) {
+        messages = await selectAllByPoster(filter.posterId, pagination)
     }
 
-    const message = await selectLatestMessageByPoster(id)
-
-    if (message.length === 0) {
+    if (messages.length === 0) {
         return {
             success: false,
             error: {
@@ -108,5 +105,34 @@ export async function getByPoster(id: string): Promise<GetMessageResp> {
         }
     }
 
-    return { success: true, message: message[0] }
+    messages = await Tags.add(messages)
+
+    return {
+        success: true,
+        messages,
+        pagination: await getPaginationData(pagination, filter)
+    }
+
+}
+
+export async function getAll(filter: Filter): Promise<GetMessagesResp> {
+    const pagination = parsePaginationData(filter)
+    let messages = await selectMessages(pagination)
+
+    if (messages.length === 0) {
+        return {
+            success: false,
+            error: {
+                code: Codes.NotFound
+            }
+        }
+    }
+
+    messages = await Tags.add(messages)
+
+    return {
+        success: true,
+        messages,
+        pagination: await getPaginationData(pagination, filter)
+    }
 }

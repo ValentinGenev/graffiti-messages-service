@@ -30,6 +30,17 @@ export function selectLatestMessageByPoster(posterId: string): Promise<Message[]
     )
 }
 
+export async function selectAllByPoster(posterId: string, pagination: Pagination): Promise<Message[]> {
+    return database.query(`
+        SELECT *
+            FROM ${DB_NAME}.messages
+            WHERE poster_id = ?
+            ORDER BY post_date DESC
+            LIMIT ?, ?`,
+        [posterId, getOffset(pagination), pagination.postsPerPage]
+    )
+}
+
 export async function selectTagsByNames(names: string[]): Promise<Tag[]> {
     const values = names.map(name => mysql.escape(name)).join(',')
 
@@ -87,6 +98,17 @@ export async function countPostsWithTag(tag: string) : Promise<number> {
             ON m.id = mt.message_id
             WHERE t.name = ?`,
         [tag]
+    )
+
+    return data.length ? data[0]['COUNT(m.id)'] : 0
+}
+
+export async function countPostsByPosterId(posterId: string): Promise<number> {
+    const data = await database.query(`
+        SELECT COUNT(m.id)
+            FROM ${DB_NAME}.messages m
+            WHERE m.poster_id = ?`,
+        [posterId]
     )
 
     return data.length ? data[0]['COUNT(m.id)'] : 0
