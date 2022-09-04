@@ -1,9 +1,9 @@
-import { GetMessagesReq, PostMessageReq } from "../interfaces/IMessage"
+import { GetMessagesReq, PostMessageReq } from '../interfaces/IMessage'
 import { Response } from '../interfaces/IResponse'
-import * as Messages from "../services/messages"
-import { isBlank } from "../utilities/helper-functions"
-import { Codes } from "../utilities/http-responses"
-import { getStatus, handleInternalError } from "../utilities/responses"
+import * as Messages from '../services/Messages'
+import { isBlank } from '../utilities/helper-functions'
+import { Codes } from '../utilities/http-responses'
+import { getStatus, handleInternalError } from '../utilities/responses'
 
 export async function getMessages(request: GetMessagesReq, response: Record<string, any>) {
     try {

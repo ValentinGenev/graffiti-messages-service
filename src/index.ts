@@ -5,7 +5,7 @@ import express from 'express'
 import { useBodyParser } from './utilities/helper-functions'
 import { MySqlDatabase } from './lib/database'
 import { RestServer } from './lib/rest'
-import * as dalCreate from './dal/create'
+import * as dalCreate from './dal/schema'
 import * as dalSettings from './dal/settings'
 import * as router from './routes'
 
@@ -19,7 +19,7 @@ export const database = new MySqlDatabase(mysql.createConnection({
     password: env.DB_PASSWORD,
     database: env.DB_NAME,
     multipleStatements: true
-}))
+}), mysql)
 export const rest = new RestServer({
     server: express(),
     host: env.REST_HOST,

@@ -1,7 +1,8 @@
-import * as Dal from "../dal/select"
-import * as Request from "../interfaces/IRequest";
-import * as Response from "../interfaces/IResponse";
-import { isBlank } from "../utilities/helper-functions";
+import * as MessagesDal from '../dal/Messages';
+import * as TagsDal from '../dal/Tags';
+import * as Request from '../interfaces/IRequest';
+import * as Response from '../interfaces/IResponse';
+import { isBlank } from '../utilities/helper-functions';
 
 const DEFAULT_PAGE_INDEX = 1
 const DEFAULT_POSTS_PER_PAGE = 20
@@ -18,7 +19,7 @@ export function parsePaginationData(query: Record<string, any>): Request.Paginat
 export async function getPaginationData(pagination: Request.Pagination, query: Record<string, any>): Promise<Response.Pagination> {
     const { pageIndex, postsPerPage } = pagination
 
-    const allPostsCount = await countPosts(query)
+    const allPostsCount = await count(query)
     const postsCount = await countPostsPerPage(pagination, allPostsCount)
     const pagesCount = Math.ceil(allPostsCount / postsPerPage)
 
@@ -37,15 +38,15 @@ export async function getPaginationData(pagination: Request.Pagination, query: R
     return paginationData
 }
 
-async function countPosts(query: Record<string, any>): Promise<number> {
+async function count(query: Record<string, any>): Promise<number> {
     if (!isBlank(query.tag)) {
-        return await Dal.countPostsWithTag(query.tag)
+        return await TagsDal.countMessagesWithTag(query.tag)
     }
     if (!isBlank(query.posterId)) {
-        return await Dal.countPostsByPosterId(query.posterId)
+        return await MessagesDal.countByPoster(query.posterId)
     }
 
-    return await Dal.countPosts()
+    return await MessagesDal.count()
 }
 
 async function countPostsPerPage(pagination: Request.Pagination, allPostsCount: number): Promise<number> {

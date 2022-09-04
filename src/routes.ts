@@ -1,8 +1,8 @@
 import dotenv from 'dotenv'
 import path from 'path'
-import { Request, Response } from "express"
+import { Request, Response } from 'express'
 import { RestServer } from './lib/rest'
-import { getMessages, postMessage } from './controllers/messages'
+import { getMessages, postMessage } from './controllers/Messages'
 import { handleInternalError } from './utilities/responses'
 
 dotenv.config()

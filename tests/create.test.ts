@@ -1,7 +1,7 @@
 import dotenv from 'dotenv'
 import { database } from '../src'
+import { selectLastByPoster } from '../src/dal/messages'
 import { Message } from '../src/interfaces/IMessage'
-import { selectLatestMessageByPoster } from '../src/dal/select'
 import * as Messages from '../src/services/messages'
 import * as Tags from '../src/services/tags'
 import { Codes } from '../src/utilities/http-responses'
@@ -43,7 +43,7 @@ describe('Create service tests:', () => {
     })
 
     test('relateToMessage', async () => {
-        const lastPost = await selectLatestMessageByPoster(message.poster_id)
+        const lastPost = await selectLastByPoster(message.poster_id)
 
         if (typeof lastPost[0].id !== 'undefined') {
             const response = await Tags.relateToMessage(tagNames, lastPost[0].id)

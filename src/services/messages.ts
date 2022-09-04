@@ -1,13 +1,11 @@
 import dotenv from 'dotenv'
-import { selectAllByPoster, selectMessages, selectMessagesByTag } from "../dal/select"
-import { insertMessage } from '../dal/insert'
-import { selectLatestMessageByPoster } from '../dal/select'
+import { insert, selectAll, selectAllByPoster, selectLastByPoster, selectAllWithTag } from '../dal/Messages'
 import { Message, PostMessageResp, GetMessagesResp } from '../interfaces/IMessage'
+import { Filter } from '../interfaces/IRequest'
 import { posterIsSpamming, sanitizeHtml } from '../utilities/helper-functions'
 import { Codes, MESSAGES } from '../utilities/http-responses'
 import { getPaginationData, parsePaginationData } from "./pagination";
-import * as Tags from './tags'
-import { Filter } from '../interfaces/IRequest'
+import * as Tags from './Tags'
 
 dotenv.config()
 
@@ -43,17 +41,17 @@ export async function create(data: Message): Promise<PostMessageResp> {
     }
 
     data.message = sanitizeHtml(data.message)
-    const messageInsert = await insertMessage(data)
+    const newMessage = await insert(data)
 
     if (data.tags?.length) {
-        await Tags.relateToMessage(data.tags, messageInsert.insertId)
+        await Tags.relateToMessage(data.tags, newMessage.insertId)
     }
 
     return { success: true, message: data }
 }
 
 export async function isSpam(posterId: string): Promise<boolean> {
-    const lastPost = await selectLatestMessageByPoster(posterId)
+    const lastPost = await selectLastByPoster(posterId)
 
     if (lastPost.length === 1) {
         return posterIsSpamming(lastPost[0], Number(process.env.TIME_LIMIT))
@@ -67,7 +65,7 @@ export async function getAllByTag(filter: Filter): Promise<GetMessagesResp> {
     let messages: Message[] = []
 
     if (filter.tag) {
-        messages = await selectMessagesByTag(filter.tag, pagination)
+        messages = await selectAllWithTag(filter.tag, pagination)
     }
 
     if (messages.length === 0) {
@@ -117,7 +115,7 @@ export async function getAllByPosterId(filter: Filter): Promise<GetMessagesResp>
 
 export async function getAll(filter: Filter): Promise<GetMessagesResp> {
     const pagination = parsePaginationData(filter)
-    let messages = await selectMessages(pagination)
+    let messages = await selectAll(pagination)
 
     if (messages.length === 0) {
         return {
