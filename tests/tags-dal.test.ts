@@ -1,10 +1,9 @@
 import { database } from '../src/index'
+import { posterId, tagNames } from './mock/data'
 import * as Messages from '../src/dal/Messages'
 import * as Tags from '../src/dal/Tags'
 
 describe('Tags DAL tests:', () => {
-    const posterId = 'randomfingerprintstring_test_database'
-    const tagNames = ['Test Tag 0', 'Test Tag 1', "' or 1=1; drop table graffiti.messages; —"]
     let newMessage: Record<string, any>
 
     beforeAll(async () => {
