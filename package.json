@@ -9,8 +9,7 @@
     "start": "node ./dist/index.js",
     "dev": "nodemon ./src/index.ts",
     "test": "npx jest tests/",
-    "test-tags": "npx jest tags-dal.test.ts",
-    "test-messages": "npx jest messages-dal.test.ts"
+    "test-messages": "npx jest messages.test.ts --detectOpenHandles"
   },
   "repository": {
     "type": "git",

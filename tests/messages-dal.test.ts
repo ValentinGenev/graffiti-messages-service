@@ -1,11 +1,9 @@
 import { database } from '../src/index'
+import { posterId, filter, tagNames } from './mock/data'
 import * as Messages from '../src/dal/Messages'
 import * as Tags from '../src/dal/Tags'
 
 describe('Messages DAL tests:', () => {
-    const posterId = 'randomfingerprintstring_test_database'
-    const pagination = { pageIndex: 1, postsPerPage: 10 }
-    const tagNames = ['Test Tag 0']
     let newMessage: Record<string, any>
 
     beforeAll(async () => {
@@ -19,11 +17,11 @@ describe('Messages DAL tests:', () => {
     })
 
     test('selectAll(pagination)', async () => {
-        const result = await Messages.selectAll(pagination)
+        const result = await Messages.selectAll(filter)
         expect(result.length !== 0).toBeTruthy()
     })
     test('selectAllByPoster(posterId, pagination)', async () => {
-        const result = await Messages.selectAllByPoster(posterId, pagination)
+        const result = await Messages.selectAllByPoster(posterId, filter)
         expect(result.length !== 0).toBeTruthy()
     })
     test('selectLastByPoster(posterId)', async () => {
@@ -32,7 +30,7 @@ describe('Messages DAL tests:', () => {
     })
     test('selectAllWithTag(name, pagination)', async () => {
         await Tags.relateTagsAndMessages(newMessage.insertId, tagNames)
-        const result = await Messages.selectAllWithTag(tagNames[0], pagination)
+        const result = await Messages.selectAllWithTag(tagNames[0], filter)
         expect(result.length !== 0).toBeTruthy()
     })
 

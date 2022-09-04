@@ -50,7 +50,7 @@ export async function create(data: Message): Promise<PostMessageResp> {
     return { success: true, message: data }
 }
 
-export async function isSpam(posterId: string): Promise<boolean> {
+async function isSpam(posterId: string): Promise<boolean> {
     const lastPost = await selectLastByPoster(posterId)
 
     if (lastPost.length === 1) {
@@ -60,13 +60,9 @@ export async function isSpam(posterId: string): Promise<boolean> {
     return false
 }
 
-export async function getAllByTag(filter: Filter): Promise<GetMessagesResp> {
-    const pagination = parsePaginationData(filter);
-    let messages: Message[] = []
-
-    if (filter.tag) {
-        messages = await selectAllWithTag(filter.tag, pagination)
-    }
+export async function getAll(filter: Filter): Promise<GetMessagesResp> {
+    const pagination = parsePaginationData(filter)
+    let messages = await selectAll(pagination)
 
     if (messages.length === 0) {
         return {
@@ -77,7 +73,7 @@ export async function getAllByTag(filter: Filter): Promise<GetMessagesResp> {
         }
     }
 
-    messages = await Tags.add(messages)
+    messages = await Tags.addToMessages(messages)
 
     return {
         success: true,
@@ -103,7 +99,7 @@ export async function getAllByPosterId(filter: Filter): Promise<GetMessagesResp>
         }
     }
 
-    messages = await Tags.add(messages)
+    messages = await Tags.addToMessages(messages)
 
     return {
         success: true,
@@ -113,9 +109,13 @@ export async function getAllByPosterId(filter: Filter): Promise<GetMessagesResp>
 
 }
 
-export async function getAll(filter: Filter): Promise<GetMessagesResp> {
-    const pagination = parsePaginationData(filter)
-    let messages = await selectAll(pagination)
+export async function getAllByTag(filter: Filter): Promise<GetMessagesResp> {
+    const pagination = parsePaginationData(filter);
+    let messages: Message[] = []
+
+    if (filter.tag) {
+        messages = await selectAllWithTag(filter.tag, pagination)
+    }
 
     if (messages.length === 0) {
         return {
@@ -126,7 +126,7 @@ export async function getAll(filter: Filter): Promise<GetMessagesResp> {
         }
     }
 
-    messages = await Tags.add(messages)
+    messages = await Tags.addToMessages(messages)
 
     return {
         success: true,

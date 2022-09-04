@@ -21,7 +21,7 @@ async function handleTags(tags: string[]): Promise<Response> {
     return { success: true }
 }
 
-export async function add(messages: Message[]): Promise<Message[]> {
+export async function addToMessages(messages: Message[]): Promise<Message[]> {
     const messagesWithTags = [...messages]
 
     for (const message of messagesWithTags) {
