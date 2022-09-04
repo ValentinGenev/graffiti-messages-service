@@ -3,7 +3,7 @@ import { OkPacket } from 'mysql'
 import { database } from '../src/index'
 import { Message } from '../src/interfaces/IMessage'
 import * as Messages from '../src/services/messages'
-import { insertMessage, insertTags, relateTagsAndMessages } from '../src/dal/insert'
+import { insert, insert, relateTagsAndMessages } from '../src/dal/insert'
 import { Codes } from '../src/utilities/http-responses'
 
 dotenv.config()
@@ -14,8 +14,8 @@ describe('Read service tests:', () => {
     let messageInsert: OkPacket
 
     beforeAll(async () => {
-        messageInsert = await insertMessage({ poster_id: posterId, message: 'Test message' })
-        await insertTags(tagNames)
+        messageInsert = await insert({ poster_id: posterId, message: 'Test message' })
+        await insert(tagNames)
         await relateTagsAndMessages(messageInsert.insertId, tagNames)
     })
 

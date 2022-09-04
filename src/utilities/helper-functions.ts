@@ -1,6 +1,6 @@
-import bodyParser from "body-parser";
-import { Message } from "../interfaces/IMessage";
-import { RestServer } from "../lib/rest";
+import bodyParser from 'body-parser';
+import { Message } from '../interfaces/IMessage';
+import { RestServer } from '../lib/rest';
 
 /**
  * @param timeLimit default is 2 minutes in ms

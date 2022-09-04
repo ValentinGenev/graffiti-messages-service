@@ -1,6 +1,5 @@
 import { MySqlDatabase } from "../lib/database"
 
-
 export async function createTables(database: MySqlDatabase): Promise<void> {
     await createMessagesTable(database)
     await createTagsTable(database)

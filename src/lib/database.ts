@@ -1,8 +1,10 @@
 export class MySqlDatabase {
     private connection
+    private utils
 
-    constructor(connection: any) {
+    constructor(connection: any, utils: any) {
         this.connection = connection
+        this.utils = utils
     }
 
     getConnection() {
@@ -28,5 +30,9 @@ export class MySqlDatabase {
                 resolve(result)
             })
         })
+    }
+
+    escape(input: string): string {
+        return this.utils.escape(input)
     }
 }
