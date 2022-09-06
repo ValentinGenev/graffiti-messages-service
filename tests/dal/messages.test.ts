@@ -1,5 +1,5 @@
 import { database } from '../../src/index'
-import { posterId, paginationFilter, tagNames } from '../mock/data'
+import { posterId, paginationFilter, tagNamesForMessages } from '../mock/data'
 import * as Messages from '../../src/dal/Messages'
 import * as Tags from '../../src/dal/Tags'
 
@@ -7,7 +7,7 @@ describe('Messages DAL tests:', () => {
     let newMessage: Record<string, any>
 
     beforeAll(async () => {
-        await Tags.insert(tagNames)
+        await Tags.insert(tagNamesForMessages)
     })
 
     test('insert(data)', async () => {
@@ -18,19 +18,25 @@ describe('Messages DAL tests:', () => {
 
     test('selectAll(pagination)', async () => {
         const result = await Messages.selectAll(paginationFilter)
+
         expect(result.length !== 0).toBeTruthy()
     })
     test('selectAllByPoster(posterId, pagination)', async () => {
         const result = await Messages.selectAllByPoster(posterId, paginationFilter)
+
         expect(result.length !== 0).toBeTruthy()
     })
     test('selectLastByPoster(posterId)', async () => {
         const result = await Messages.selectLastByPoster(posterId)
+
         expect(result.length === 1).toBeTruthy()
     })
     test('selectAllWithTag(name, pagination)', async () => {
-        await Tags.relateTagsAndMessages(newMessage.insertId, tagNames)
-        const result = await Messages.selectAllWithTag(tagNames[0], paginationFilter)
+        await Tags.relateTagsAndMessages(newMessage.insertId, tagNamesForMessages)
+
+        const result = await Messages.selectAllWithTag(tagNamesForMessages[0],
+            paginationFilter)
+
         expect(result.length !== 0).toBeTruthy()
     })
 
@@ -45,7 +51,8 @@ describe('Messages DAL tests:', () => {
 
     afterAll(async () => {
         const databaseName = database.getConnection().config.database
-        const tagNamesString = tagNames.map(name => database.escape(name)).join(',')
+        const tagNamesString = tagNamesForMessages.map(name =>
+            database.escape(name)).join(',')
 
         await database.query(`
             DELETE
