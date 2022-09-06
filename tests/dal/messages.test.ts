@@ -1,7 +1,7 @@
-import { database } from '../src/index'
-import { posterId, filter, tagNames } from './mock/data'
-import * as Messages from '../src/dal/Messages'
-import * as Tags from '../src/dal/Tags'
+import { database } from '../../src/index'
+import { posterId, paginationFilter, tagNames } from '../mock/data'
+import * as Messages from '../../src/dal/Messages'
+import * as Tags from '../../src/dal/Tags'
 
 describe('Messages DAL tests:', () => {
     let newMessage: Record<string, any>
@@ -17,11 +17,11 @@ describe('Messages DAL tests:', () => {
     })
 
     test('selectAll(pagination)', async () => {
-        const result = await Messages.selectAll(filter)
+        const result = await Messages.selectAll(paginationFilter)
         expect(result.length !== 0).toBeTruthy()
     })
     test('selectAllByPoster(posterId, pagination)', async () => {
-        const result = await Messages.selectAllByPoster(posterId, filter)
+        const result = await Messages.selectAllByPoster(posterId, paginationFilter)
         expect(result.length !== 0).toBeTruthy()
     })
     test('selectLastByPoster(posterId)', async () => {
@@ -30,7 +30,7 @@ describe('Messages DAL tests:', () => {
     })
     test('selectAllWithTag(name, pagination)', async () => {
         await Tags.relateTagsAndMessages(newMessage.insertId, tagNames)
-        const result = await Messages.selectAllWithTag(tagNames[0], filter)
+        const result = await Messages.selectAllWithTag(tagNames[0], paginationFilter)
         expect(result.length !== 0).toBeTruthy()
     })
 

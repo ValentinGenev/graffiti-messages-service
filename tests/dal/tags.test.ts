@@ -1,7 +1,7 @@
-import { database } from '../src/index'
-import { posterId, tagNames } from './mock/data'
-import * as Messages from '../src/dal/Messages'
-import * as Tags from '../src/dal/Tags'
+import { database } from '../../src/index'
+import { posterId, tagNames } from '../mock/data'
+import * as Messages from '../../src/dal/Messages'
+import * as Tags from '../../src/dal/Tags'
 
 describe('Tags DAL tests:', () => {
     let newMessage: Record<string, any>
@@ -39,6 +39,10 @@ describe('Tags DAL tests:', () => {
     test('countMessagesWithTag()', async () => {
         const result = await Tags.countMessagesWithTag(tagNames[0])
         expect(result === 1).toBeTruthy()
+    })
+    test('countMessagesWithTag(badTagName)', async () => {
+        const result = await Tags.countMessagesWithTag('badTagName')
+        expect(result === 0).toBeTruthy()
     })
 
     afterAll(async () => {

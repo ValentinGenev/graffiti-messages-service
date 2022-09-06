@@ -20,22 +20,22 @@ export async function create(data: Message): Promise<PostMessageResp> {
         }
     }
 
-    if (await isSpam(data.poster_id)) {
-        return {
-            success: false,
-            error: {
-                code: Codes.TooManyRequests,
-                message: MESSAGES.tooManyRequests(Number(process.env.TIME_LIMIT) / 60000)
-            }
-        }
-    }
-
     if (data.message.length > Number(process.env.MAX_MESSAGE_LENGTH)) {
         return {
             success: false,
             error: {
                 code: Codes.MaxLengthExceeded,
                 message: MESSAGES.maxLengthExceeded
+            }
+        }
+    }
+
+    if (await isSpam(data.poster_id)) {
+        return {
+            success: false,
+            error: {
+                code: Codes.TooManyRequests,
+                message: MESSAGES.tooManyRequests(Number(process.env.TIME_LIMIT) / 60000)
             }
         }
     }
