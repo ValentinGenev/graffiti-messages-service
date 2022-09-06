@@ -1,9 +1,12 @@
 import { Message } from "../../src/interfaces/IMessage"
 import { Filter } from "../../src/interfaces/IRequest"
 import { Pagination } from "../../src/interfaces/IResponse"
+import { Tag } from "../../src/interfaces/ITag"
 
 export const posterId = 'randomfingerprintstring_test_read'
-export const tagNames = ['Read Label 0', 'Read Label 1', "' or 1=1; drop table graffiti.messages; —"]
+export const tagNames = ['Tag Name 0', 'Tag Name 1', "' or 1=1; drop table graffiti.messages; —"]
+export const tagNamesForMessages = ['MTag Label 0', 'MTag Label 1']
+
 export const oldMessage: Message = {
     post_date: '2022-04-20 00:00:00',
     poster_id: posterId,
@@ -15,6 +18,7 @@ export const spamMessage: Message = {
     message: 'Hello, World!'
 }
 export const message: Message = {
+    id: 1,
     poster_id: posterId,
     message: 'Hello, World!'
 }
@@ -30,6 +34,11 @@ export const messageWithTags: Message = {
     poster_id: posterId,
     message: 'Hello, World!',
     tags: tagNames
+}
+
+export const tag: Tag = {
+    id: 1,
+    name: tagNames[0]
 }
 
 export const paginationFilter: Filter = {
