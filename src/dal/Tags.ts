@@ -65,5 +65,5 @@ export async function countMessagesWithTag(tag: string) : Promise<number> {
         [tag]
     )
 
-    return data.length ? data[0]['COUNT(m.id)'] : 0
+    return data[0]['COUNT(m.id)']
 }

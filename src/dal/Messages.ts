@@ -71,7 +71,7 @@ export async function count(): Promise<number> {
             FROM ${DB_NAME}.messages`
     )
 
-    return data.length ? data[0]['COUNT(id)'] : 0
+    return data[0]['COUNT(id)']
 }
 
 export async function countByPoster(posterId: string): Promise<number> {
@@ -82,5 +82,5 @@ export async function countByPoster(posterId: string): Promise<number> {
         [posterId]
     )
 
-    return data.length ? data[0]['COUNT(m.id)'] : 0
+    return data[0]['COUNT(m.id)']
 }
