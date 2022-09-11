@@ -6,7 +6,7 @@ import * as Messages from '../../src/services/Messages'
 import { Codes } from '../../src/utilities/http-responses'
 import { oldMessage, message, pagination, messageWithEmptyMessage, spamMessage,
     messageHugeMessage, messageWithTags, paginationFilter, posterFilter,
-    tagFilter } from '../mock/data'
+    tagFilter, messageId } from '../mock/data'
 
 describe('Messages service tests:', () => {
     describe('create() suite', () => {
@@ -110,6 +110,26 @@ describe('Messages service tests:', () => {
 
         test('getAllByTag(paginationFilter) throws NotFound', async () => {
             const response = await Messages.getAllByTag(paginationFilter)
+
+            expect(response.success).toBeFalsy()
+            expect(response.error?.code === Codes.NotFound).toBeTruthy()
+        })
+    })
+
+    describe('getById() suite', () => {
+        test ('getById(id)',async () => {
+            jest.spyOn(MessagesDal, 'selectById').mockResolvedValue([message])
+
+            const response = await Messages.getById(messageId)
+
+            expect(response.success).toBeTruthy()
+
+        })
+
+        test('getById(badId) throws NotFound', async () => {
+            jest.spyOn(MessagesDal, 'selectById').mockResolvedValue([])
+
+            const response = await Messages.getById(messageId - 2)
 
             expect(response.success).toBeFalsy()
             expect(response.error?.code === Codes.NotFound).toBeTruthy()

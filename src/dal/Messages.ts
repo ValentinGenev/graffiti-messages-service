@@ -65,6 +65,16 @@ export async function selectAllWithTag(name: string, pagination: Pagination):
     )
 }
 
+export async function selectById(id: number): Promise<Message[]> {
+    return database.query(`
+        SELECT *
+            FROM ${DB_NAME}.messages
+            WHERE id = ?
+            LIMIT 1`,
+        [id]
+    )
+}
+
 export async function count(): Promise<number> {
     const data = await database.query(`
         SELECT COUNT(id)
