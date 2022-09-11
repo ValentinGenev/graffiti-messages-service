@@ -2,7 +2,7 @@ import dotenv from 'dotenv'
 import { database } from "..";
 import { Message } from "../interfaces/IMessage";
 import { Pagination } from "../interfaces/IRequest";
-import { getOffset } from './helper-functions';
+import { getOffset } from '../utilities/pagination';
 
 dotenv.config()
 const DB_NAME = process.env.DB_NAME

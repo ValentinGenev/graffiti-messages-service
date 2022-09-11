@@ -59,7 +59,7 @@ describe('Messages service tests:', () => {
         test('getAll(paginationFilter)', async () => {
             jest.spyOn(MessagesDal, 'selectAll').mockResolvedValue([message])
             jest.spyOn(Tags, 'addToMessages').mockResolvedValue([messageWithTags])
-            jest.spyOn(Pagination, 'getPaginationData').mockResolvedValue(pagination)
+            jest.spyOn(Pagination, 'Pagination.getData').mockResolvedValue(pagination)
 
             const response = await Messages.getAll(paginationFilter)
 
