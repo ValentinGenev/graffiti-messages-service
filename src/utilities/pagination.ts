@@ -2,12 +2,12 @@ import * as MessagesDal from '../dal/Messages';
 import * as TagsDal from '../dal/Tags';
 import * as Request from '../interfaces/IRequest';
 import * as Response from '../interfaces/IResponse';
-import { isBlank } from '../utilities/helper-functions';
+import { isBlank } from './helper-functions';
 
 const DEFAULT_PAGE_INDEX = 1
 const DEFAULT_POSTS_PER_PAGE = 20
 
-export function parsePaginationData(query: Record<string, any>): Request.Pagination {
+export function parseData(query: Record<string, any>): Request.Pagination {
     return {
         pageIndex: isBlank(query.pageIndex) ?
             DEFAULT_PAGE_INDEX : Number(query.pageIndex),
@@ -16,7 +16,7 @@ export function parsePaginationData(query: Record<string, any>): Request.Paginat
     }
 }
 
-export async function getPaginationData(pagination: Request.Pagination, query: Record<string, any>): Promise<Response.Pagination> {
+export async function getData(pagination: Request.Pagination, query: Record<string, any>): Promise<Response.Pagination> {
     const { pageIndex, postsPerPage } = pagination
 
     const allPostsCount = await count(query)
@@ -56,4 +56,9 @@ async function countPostsPerPage(pagination: Request.Pagination, allPostsCount: 
     const lastPageCount = allPostsCount - (pagesCount - 1) * postsPerPage
 
     return isLastPage ? lastPageCount : postsPerPage
+}
+
+export function getOffset(pagination: Request.Pagination) {
+    return pagination.pageIndex && pagination.postsPerPage ?
+        (pagination.pageIndex - 1) * pagination.postsPerPage : 0
 }

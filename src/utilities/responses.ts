@@ -22,4 +22,10 @@ export function handleInternalError(error: any, response: Record<string, any>) {
 
 function storeErrorInLog(error: any) {
     // TODO: store the actual error in an error log
+    console.log(`${utcDate()} [ERROR]`, error)
+}
+
+function utcDate(): string {
+    const time = new Date()
+    return time.toLocaleString()
 }

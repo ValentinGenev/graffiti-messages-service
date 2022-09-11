@@ -1,12 +1,15 @@
 import { Filter } from './IRequest'
-import { Response, Pagination } from './IResponse'
+import { Response, Pagination, Links, Link } from './IResponse'
 
 export type Message = {
     id?: number,
     post_date?: string,
     poster_id: string,
     message: string,
-    tags?: string[]
+    tags?: string[],
+    _embedded: {
+        tags?: Link[]
+    }
 }
 
 export interface GetMessagesReq {
@@ -14,7 +17,8 @@ export interface GetMessagesReq {
 }
 export interface GetMessagesResp extends Response {
     messages?: Message[],
-    pagination?: Pagination
+    pagination?: Pagination,
+    _links?: Links
 }
 
 export interface GetMessageReq {
@@ -24,6 +28,7 @@ export interface GetMessageReq {
 }
 export interface GetMessageResp extends Response {
     message?: Message;
+    _links?: Links
 }
 
 export interface PostMessageReq {
@@ -31,5 +36,6 @@ export interface PostMessageReq {
     header: (arg0: string) => any
 }
 export interface PostMessageResp extends Response {
-    message?: Message
+    message?: Message,
+    _links?: Links
 }

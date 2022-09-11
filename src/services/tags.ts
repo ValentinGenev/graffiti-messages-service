@@ -1,6 +1,7 @@
 import { insert, relateTagsAndMessages, selectAllByMessage, selectAllByNames } from '../dal/Tags'
 import { Message } from '../interfaces/IMessage'
 import { Response } from '../interfaces/IResponse'
+import * as Links from '../utilities/links'
 
 export async function relateToMessage(tags: string[], messageId: number): Promise<Response> {
     if ((await handleTags(tags)).success) {
@@ -25,8 +26,12 @@ export async function addToMessages(messages: Message[]): Promise<Message[]> {
     const messagesWithTags = [...messages]
 
     for (const message of messagesWithTags) {
-        if (message.id)
-            message.tags = (await selectAllByMessage(message.id)).map(tag => tag.name)
+        if (message.id) {
+            const tags = await selectAllByMessage(message.id)
+            if (tags.length) {
+                message._embedded = { tags: Links.addTags(tags) }
+            }
+        }
     }
 
     return messagesWithTags

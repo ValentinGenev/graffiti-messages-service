@@ -15,3 +15,13 @@ export type Pagination = {
     nextPageIndex?: number,
     previousPageIndex?: number
 }
+
+export type Links = {
+    self?: Link,
+    next?: Link,
+    prev?: Link,
+}
+export type Link = {
+    href: string,
+    name?: string
+}
