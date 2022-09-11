@@ -1,6 +1,7 @@
 import dotenv from 'dotenv'
-import { insert, selectAll, selectAllByPoster, selectLastByPoster, selectAllWithTag } from '../dal/Messages'
-import { Message, PostMessageResp, GetMessagesResp } from '../interfaces/IMessage'
+import { insert, selectAll, selectAllByPoster, selectLastByPoster, selectAllWithTag, selectById } from '../dal/Messages'
+import { selectAllByMessage } from '../dal/Tags'
+import { Message, PostMessageResp, GetMessagesResp, GetMessageResp } from '../interfaces/IMessage'
 import { Filter } from '../interfaces/IRequest'
 import { posterIsSpamming, sanitizeHtml } from '../utilities/helper-functions'
 import { Codes, MESSAGES } from '../utilities/http-responses'
@@ -8,6 +9,13 @@ import { getPaginationData, parsePaginationData } from "./pagination";
 import * as Tags from './Tags'
 
 dotenv.config()
+
+const NOT_FOUND_RESP = {
+    success: false,
+    error: {
+        code: Codes.NotFound
+    }
+}
 
 export async function create(data: Message): Promise<PostMessageResp> {
     if (!data.hasOwnProperty('message') || data.message === '') {
@@ -65,12 +73,7 @@ export async function getAll(filter: Filter): Promise<GetMessagesResp> {
     let messages = await selectAll(pagination)
 
     if (messages.length === 0) {
-        return {
-            success: false,
-            error: {
-                code: Codes.NotFound
-            }
-        }
+        return NOT_FOUND_RESP
     }
 
     messages = await Tags.addToMessages(messages)
@@ -91,12 +94,7 @@ export async function getAllByPosterId(filter: Filter): Promise<GetMessagesResp>
     }
 
     if (messages.length === 0) {
-        return {
-            success: false,
-            error: {
-                code: Codes.NotFound
-            }
-        }
+        return NOT_FOUND_RESP
     }
 
     messages = await Tags.addToMessages(messages)
@@ -118,12 +116,7 @@ export async function getAllByTag(filter: Filter): Promise<GetMessagesResp> {
     }
 
     if (messages.length === 0) {
-        return {
-            success: false,
-            error: {
-                code: Codes.NotFound
-            }
-        }
+        return NOT_FOUND_RESP
     }
 
     messages = await Tags.addToMessages(messages)
@@ -132,5 +125,20 @@ export async function getAllByTag(filter: Filter): Promise<GetMessagesResp> {
         success: true,
         messages,
         pagination: await getPaginationData(pagination, filter)
+    }
+}
+
+export async function getById(id: number): Promise<GetMessageResp> {
+    const messages = await selectById(id)
+
+    if (messages.length === 0) {
+        return NOT_FOUND_RESP
+    }
+
+    messages[0].tags = (await selectAllByMessage(id)).map(tag => tag.name)
+
+    return {
+        success: true,
+        message: messages[0]
     }
 }

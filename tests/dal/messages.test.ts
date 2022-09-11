@@ -39,6 +39,11 @@ describe('Messages DAL tests:', () => {
 
         expect(result.length !== 0).toBeTruthy()
     })
+    test('selectById(id)', async () => {
+        const result = await Messages.selectById(newMessage.insertId)
+
+        expect(result.length === 1).toBeTruthy()
+    })
 
     test('count()', async () => {
         const result = await Messages.count()

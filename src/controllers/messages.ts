@@ -1,4 +1,4 @@
-import { GetMessagesReq, PostMessageReq } from '../interfaces/IMessage'
+import { GetMessageReq, GetMessagesReq, PostMessageReq } from '../interfaces/IMessage'
 import { Response } from '../interfaces/IResponse'
 import * as Messages from '../services/Messages'
 import { isBlank } from '../utilities/helper-functions'
@@ -25,6 +25,19 @@ export async function getMessages(request: GetMessagesReq, response: Record<stri
         else {
             body = await Messages.getAll(query)
         }
+
+        response.status(getStatus(body, Codes.Ok))
+        response.json(body)
+    }
+    catch (error) {
+        handleInternalError(error, response)
+    }
+}
+
+export async function getMessage(request: GetMessageReq, response: Record<string, any>) {
+    try {
+        const { params } = request
+        const body = await Messages.getById(params.id)
 
         response.status(getStatus(body, Codes.Ok))
         response.json(body)

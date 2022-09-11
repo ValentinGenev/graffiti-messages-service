@@ -17,6 +17,15 @@ export interface GetMessagesResp extends Response {
     pagination?: Pagination
 }
 
+export interface GetMessageReq {
+    params: {
+        id: number
+    }
+}
+export interface GetMessageResp extends Response {
+    message?: Message;
+}
+
 export interface PostMessageReq {
     body: Message,
     header: (arg0: string) => any
