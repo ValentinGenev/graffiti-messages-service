@@ -13,7 +13,8 @@ export type Pagination = {
     postsCount: number,
     pagesCount: number,
     nextPageIndex?: number,
-    previousPageIndex?: number
+    previousPageIndex?: number,
+    _links?: Links
 }
 
 export type Links = {

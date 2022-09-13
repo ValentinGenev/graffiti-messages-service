@@ -9,7 +9,8 @@ export type Message = {
     tags?: string[],
     _embedded: {
         tags?: Link[]
-    }
+    },
+    _links: Links
 }
 
 export interface GetMessagesReq {

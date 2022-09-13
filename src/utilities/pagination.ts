@@ -2,6 +2,7 @@ import * as MessagesDal from '../dal/Messages';
 import * as TagsDal from '../dal/Tags';
 import * as Request from '../interfaces/IRequest';
 import * as Response from '../interfaces/IResponse';
+import * as Links from '../utilities/links'
 import { isBlank } from './helper-functions';
 
 const DEFAULT_PAGE_INDEX = 1
@@ -16,26 +17,25 @@ export function parseData(query: Record<string, any>): Request.Pagination {
     }
 }
 
-export async function getData(pagination: Request.Pagination, query: Record<string, any>): Promise<Response.Pagination> {
-    const { pageIndex, postsPerPage } = pagination
+export async function create(paginationData: Request.Pagination, query: Record<string, any>): Promise<Response.Pagination> {
+    const { pageIndex, postsPerPage } = paginationData
 
     const allPostsCount = await count(query)
-    const postsCount = await countPostsPerPage(pagination, allPostsCount)
+    const postsCount = await countPostsPerPage(paginationData, allPostsCount)
     const pagesCount = Math.ceil(allPostsCount / postsPerPage)
 
-    const paginationData: Response.Pagination = {
-        pageIndex,
-        postsCount,
-        pagesCount
+    const pagination: Response.Pagination = {
+        pageIndex, postsCount, pagesCount, _links: {}
     }
     if (pageIndex !== pagesCount) {
-        paginationData.nextPageIndex = pageIndex + 1
+        pagination.nextPageIndex = pageIndex + 1
     }
     if (pageIndex !== 1) {
-        paginationData.previousPageIndex = pageIndex - 1
+        pagination.previousPageIndex = pageIndex - 1
     }
+    pagination._links = Links.addPaginationLinks(pagination)
 
-    return paginationData
+    return pagination
 }
 
 async function count(query: Record<string, any>): Promise<number> {
