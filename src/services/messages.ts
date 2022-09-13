@@ -12,7 +12,7 @@ import * as Tags from './Tags'
 
 dotenv.config()
 
-const NOT_FOUND_RESP: Response = {
+const NOT_FOUND_RES: Response = {
     success: false,
     error: {
         code: Codes.NotFound
@@ -71,77 +71,77 @@ async function isSpam(posterId: string): Promise<boolean> {
 }
 
 export async function getAll(filter: Filter): Promise<GetMessagesResp> {
-    const pagination = Pagination.parseData(filter)
-    let messages = await selectAll(pagination)
+    const paginationData = Pagination.parseData(filter)
+    let messages = await selectAll(paginationData)
 
     if (messages.length === 0) {
-        return NOT_FOUND_RESP
+        return NOT_FOUND_RES
     }
 
     messages = await Tags.addToMessages(messages)
+    messages = Links.addSelf(messages)
 
     return {
         success: true,
         messages,
-        pagination: await Pagination.getData(pagination, filter)
+        pagination: await Pagination.create(paginationData, filter)
     }
 }
 
 export async function getAllByPosterId(filter: Filter): Promise<GetMessagesResp> {
-    const pagination = Pagination.parseData(filter);
+    const paginationData = Pagination.parseData(filter)
     let messages: Message[] = []
 
     if (filter.posterId) {
-        messages = await selectAllByPoster(filter.posterId, pagination)
+        messages = await selectAllByPoster(filter.posterId, paginationData)
     }
 
     if (messages.length === 0) {
-        return NOT_FOUND_RESP
+        return NOT_FOUND_RES
     }
 
     messages = await Tags.addToMessages(messages)
+    messages = Links.addSelf(messages)
 
     return {
         success: true,
         messages,
-        pagination: await Pagination.getData(pagination, filter)
+        pagination: await Pagination.create(paginationData, filter)
     }
 
 }
 
 export async function getAllByTag(filter: Filter): Promise<GetMessagesResp> {
-    const pagination = Pagination.parseData(filter);
+    const paginationData = Pagination.parseData(filter);
     let messages: Message[] = []
 
     if (filter.tag) {
-        messages = await selectAllWithTag(filter.tag, pagination)
+        messages = await selectAllWithTag(filter.tag, paginationData)
     }
 
     if (messages.length === 0) {
-        return NOT_FOUND_RESP
+        return NOT_FOUND_RES
     }
 
     messages = await Tags.addToMessages(messages)
+    messages = Links.addSelf(messages)
 
     return {
         success: true,
         messages,
-        pagination: await Pagination.getData(pagination, filter)
+        pagination: await Pagination.create(paginationData, filter)
     }
 }
 
 export async function getById(id: number): Promise<GetMessageResp> {
     const messages = await selectById(id)
     if (messages.length === 0) {
-        return NOT_FOUND_RESP
+        return NOT_FOUND_RES
     }
 
     const tags = await selectAllByMessage(id)
     if (tags.length) {
         messages[0]._embedded = { tags: Links.addTags(tags) }
-
-        throw new Error("kurec");
-
     }
 
     return {
