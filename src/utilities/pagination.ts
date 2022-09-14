@@ -6,7 +6,7 @@ import * as Links from '../utilities/links'
 import { isBlank } from './helper-functions';
 
 const DEFAULT_PAGE_INDEX = 1
-const DEFAULT_POSTS_PER_PAGE = 20
+export const DEFAULT_POSTS_PER_PAGE = 20
 
 export function parseData(query: Record<string, any>): Request.Pagination {
     return {
@@ -33,7 +33,7 @@ export async function create(paginationData: Request.Pagination, query: Record<s
     if (pageIndex !== 1) {
         pagination.previousPageIndex = pageIndex - 1
     }
-    pagination._links = Links.addPaginationLinks(pagination)
+    pagination._links = Links.addPaginationLinks(pagination, postsPerPage)
 
     return pagination
 }

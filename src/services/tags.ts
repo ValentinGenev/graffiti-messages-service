@@ -2,6 +2,7 @@ import { insert, relateTagsAndMessages, selectAllByMessage, selectAllByNames } f
 import { Message } from '../interfaces/IMessage'
 import { Response } from '../interfaces/IResponse'
 import * as Links from '../utilities/links'
+import { DEFAULT_POSTS_PER_PAGE } from '../utilities/pagination'
 
 export async function relateToMessage(tags: string[], messageId: number): Promise<Response> {
     if ((await handleTags(tags)).success) {
@@ -22,14 +23,15 @@ async function handleTags(tags: string[]): Promise<Response> {
     return { success: true }
 }
 
-export async function addToMessages(messages: Message[]): Promise<Message[]> {
+export async function addToMessages(messages: Message[], postsPerPage: number):
+        Promise<Message[]> {
     const messagesWithTags = [...messages]
 
     for (const message of messagesWithTags) {
         if (message.id) {
             const tags = await selectAllByMessage(message.id)
             if (tags.length) {
-                message._embedded = { tags: Links.addTags(tags) }
+                message._embedded = { tags: Links.addTags(tags, postsPerPage) }
             }
         }
     }

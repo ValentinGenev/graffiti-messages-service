@@ -78,7 +78,7 @@ export async function getAll(filter: Filter): Promise<GetMessagesResp> {
         return NOT_FOUND_RES
     }
 
-    messages = await Tags.addToMessages(messages)
+    messages = await Tags.addToMessages(messages, paginationData.postsPerPage)
     messages = Links.addSelf(messages)
 
     return {
@@ -100,7 +100,7 @@ export async function getAllByPosterId(filter: Filter): Promise<GetMessagesResp>
         return NOT_FOUND_RES
     }
 
-    messages = await Tags.addToMessages(messages)
+    messages = await Tags.addToMessages(messages, paginationData.postsPerPage)
     messages = Links.addSelf(messages)
 
     return {
@@ -123,7 +123,7 @@ export async function getAllByTag(filter: Filter): Promise<GetMessagesResp> {
         return NOT_FOUND_RES
     }
 
-    messages = await Tags.addToMessages(messages)
+    messages = await Tags.addToMessages(messages, paginationData.postsPerPage)
     messages = Links.addSelf(messages)
 
     return {
