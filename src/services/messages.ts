@@ -9,6 +9,7 @@ import { Codes, MESSAGES } from '../utilities/http-responses'
 import * as Pagination from '../utilities/pagination';
 import * as Links from '../utilities/links'
 import * as Tags from './Tags'
+import { DEFAULT_POSTS_PER_PAGE } from '../utilities/pagination'
 
 dotenv.config()
 
@@ -78,13 +79,13 @@ export async function getAll(filter: Filter): Promise<GetMessagesResp> {
         return NOT_FOUND_RES
     }
 
-    messages = await Tags.addToMessages(messages, paginationData.postsPerPage)
-    messages = Links.addSelf(messages)
+    messages = await Tags.addToMessages(messages, paginationData)
+    messages = Links.addSelfLink(messages)
 
     return {
         success: true,
         messages,
-        pagination: await Pagination.create(paginationData, filter)
+        pagination: await Pagination.create(filter)
     }
 }
 
@@ -100,13 +101,13 @@ export async function getAllByPosterId(filter: Filter): Promise<GetMessagesResp>
         return NOT_FOUND_RES
     }
 
-    messages = await Tags.addToMessages(messages, paginationData.postsPerPage)
-    messages = Links.addSelf(messages)
+    messages = await Tags.addToMessages(messages, paginationData)
+    messages = Links.addSelfLink(messages)
 
     return {
         success: true,
         messages,
-        pagination: await Pagination.create(paginationData, filter)
+        pagination: await Pagination.create(filter)
     }
 
 }
@@ -123,26 +124,26 @@ export async function getAllByTag(filter: Filter): Promise<GetMessagesResp> {
         return NOT_FOUND_RES
     }
 
-    messages = await Tags.addToMessages(messages, paginationData.postsPerPage)
-    messages = Links.addSelf(messages)
+    messages = await Tags.addToMessages(messages, paginationData)
+    messages = Links.addSelfLink(messages)
 
     return {
         success: true,
         messages,
-        pagination: await Pagination.create(paginationData, filter)
+        pagination: await Pagination.create(filter)
     }
 }
 
 export async function getById(id: number): Promise<GetMessageResp> {
-    const messages = await selectById(id)
+    let messages = await selectById(id)
     if (messages.length === 0) {
         return NOT_FOUND_RES
     }
 
-    const tags = await selectAllByMessage(id)
-    if (tags.length) {
-        messages[0]._embedded = { tags: Links.addTags(tags) }
-    }
+    messages = await Tags.addToMessages(messages, {
+        pageIndex: 1,
+        postsPerPage: DEFAULT_POSTS_PER_PAGE
+    })
 
     return {
         success: true,

@@ -3,7 +3,7 @@ import { Link, Pagination, Links } from '../interfaces/IResponse'
 import { Tag } from '../interfaces/ITag'
 import { DEFAULT_POSTS_PER_PAGE } from './pagination'
 
-export function addSelf(messages: Message[]): Message[] {
+export function addSelfLink(messages: Message[]): Message[] {
     return messages.map(createSelfLink)
 }
 
@@ -17,7 +17,7 @@ function createSelfLink(message: Message): Message {
     return message
 }
 
-export function addTags(tags: Tag[],
+export function addTagsLinks(tags: Tag[],
         postsPerPage: number = DEFAULT_POSTS_PER_PAGE): Link[] {
     return tags.map(tag => {
         const { name } = tag

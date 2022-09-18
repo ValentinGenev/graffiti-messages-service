@@ -1,5 +1,7 @@
-import { Message } from '../src/interfaces/IMessage'
-import { convertUnixToDbTime, posterIsSpamming, sanitizeHtml } from '../src/utilities/helper-functions'
+// FIXME: run the database setup only for the DAL tests
+import { database } from '../../src'
+import { Message } from '../../src/interfaces/IMessage'
+import { convertUnixToDbTime, posterIsSpamming, sanitizeHtml } from '../../src/utilities/helper-functions'
 
 describe('Helper functions tests:', () => {
     const lastPost: Message = {
@@ -38,5 +40,9 @@ describe('Helper functions tests:', () => {
         expect(sanitizeHtml('<style><script src="myScript.js">test</script></style>') === 'test').toBeTruthy()
         expect(sanitizeHtml('<iframe src="">test</iframe>') === 'test').toBeTruthy()
         expect(sanitizeHtml('<link rel="stylesheet" href="styles.css">') === '').toBeTruthy()
+    })
+
+    afterAll(() => {
+        database.end()
     })
 })
