@@ -7,10 +7,10 @@ export type Message = {
     poster_id: string,
     message: string,
     tags?: string[],
-    _embedded: {
+    _embedded?: {
         tags?: Link[]
     },
-    _links: Links
+    _links?: Links
 }
 
 export interface GetMessagesReq {
@@ -28,8 +28,7 @@ export interface GetMessageReq {
     }
 }
 export interface GetMessageResp extends Response {
-    message?: Message;
-    _links?: Links
+    message?: Message
 }
 
 export interface PostMessageReq {

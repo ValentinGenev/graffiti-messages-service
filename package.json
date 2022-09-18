@@ -10,7 +10,6 @@
     "dev": "nodemon ./src/index.ts",
     "test": "npx jest tests/",
     "test-coverage": "npx jest tests/ --coverage",
-    "test-tags": "npx jest services/tags.test.ts --coverage"
   },
   "repository": {
     "type": "git",

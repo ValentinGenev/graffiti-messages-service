@@ -5,7 +5,7 @@ import * as Response from '../interfaces/IResponse';
 import * as Links from '../utilities/links'
 import { isBlank } from './helper-functions';
 
-const DEFAULT_PAGE_INDEX = 1
+export const DEFAULT_PAGE_INDEX = 1
 export const DEFAULT_POSTS_PER_PAGE = 20
 
 export function parseData(query: Record<string, any>): Request.Pagination {
@@ -17,11 +17,12 @@ export function parseData(query: Record<string, any>): Request.Pagination {
     }
 }
 
-export async function create(paginationData: Request.Pagination, query: Record<string, any>): Promise<Response.Pagination> {
+export async function create(query: Record<string, any>): Promise<Response.Pagination> {
+    const paginationData = parseData(query)
     const { pageIndex, postsPerPage } = paginationData
-
     const allPostsCount = await count(query)
-    const postsCount = await countPostsPerPage(paginationData, allPostsCount)
+    // TODO: check why I'm not returning the allPostsCount instead of postsCount
+    const postsCount = countPostsPerPage(paginationData, allPostsCount)
     const pagesCount = Math.ceil(allPostsCount / postsPerPage)
 
     const pagination: Response.Pagination = {
@@ -49,7 +50,7 @@ async function count(query: Record<string, any>): Promise<number> {
     return await MessagesDal.count()
 }
 
-async function countPostsPerPage(pagination: Request.Pagination, allPostsCount: number): Promise<number> {
+function countPostsPerPage(pagination: Request.Pagination, allPostsCount: number): number {
     const { pageIndex, postsPerPage } = pagination
     const pagesCount = Math.ceil(allPostsCount / postsPerPage)
     const isLastPage = pageIndex === pagesCount
