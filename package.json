@@ -9,7 +9,7 @@
     "start": "node ./dist/index.js",
     "dev": "nodemon ./src/index.ts",
     "test": "npx jest tests/",
-    "test-coverage": "npx jest tests/ --coverage",
+    "test-coverage": "npx jest tests/ --coverage"
   },
   "repository": {
     "type": "git",
