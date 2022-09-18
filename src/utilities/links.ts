@@ -29,19 +29,18 @@ export function addTags(tags: Tag[],
     })
 }
 
-export function addPaginationLinks(pagination: Pagination,
-        postsPerPage: number): Links {
+export function addPaginationLinks(pagination: Pagination): Links {
     const links: Links = {}
 
     if (pagination.nextPageIndex) {
         links.next = {
-            href: `/messages/?pageIndex=${pagination.nextPageIndex}&postsPerPage=${postsPerPage}`,
+            href: `/messages/?pageIndex=${pagination.nextPageIndex}&postsPerPage=${pagination.postsPerPage}`,
             name: 'Next page'
         }
     }
     if (pagination.previousPageIndex) {
         links.prev = {
-            href: `/messages/?pageIndex=${pagination.previousPageIndex}&postsPerPage=${postsPerPage}`,
+            href: `/messages/?pageIndex=${pagination.previousPageIndex}&postsPerPage=${pagination.postsPerPage}`,
             name: 'Previous page'
         }
     }

@@ -25,7 +25,7 @@ export async function create(paginationData: Request.Pagination, query: Record<s
     const pagesCount = Math.ceil(allPostsCount / postsPerPage)
 
     const pagination: Response.Pagination = {
-        pageIndex, postsCount, pagesCount, _links: {}
+        pageIndex, postsCount, pagesCount, postsPerPage, _links: {}
     }
     if (pageIndex !== pagesCount) {
         pagination.nextPageIndex = pageIndex + 1
@@ -33,7 +33,7 @@ export async function create(paginationData: Request.Pagination, query: Record<s
     if (pageIndex !== 1) {
         pagination.previousPageIndex = pageIndex - 1
     }
-    pagination._links = Links.addPaginationLinks(pagination, postsPerPage)
+    pagination._links = Links.addPaginationLinks(pagination)
 
     return pagination
 }
