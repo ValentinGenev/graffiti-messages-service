@@ -2,7 +2,6 @@ import { insert, relateTagsAndMessages, selectAllByMessage, selectAllByNames } f
 import { Message } from '../interfaces/IMessage'
 import { Response } from '../interfaces/IResponse'
 import * as Links from '../utilities/links'
-import { DEFAULT_POSTS_PER_PAGE } from '../utilities/pagination'
 
 export async function relateToMessage(tags: string[], messageId: number): Promise<Response> {
     if ((await handleTags(tags)).success) {

@@ -10,6 +10,7 @@ export type Response = {
 
 export type Pagination = {
     pageIndex: number,
+    postsPerPage: number,
     postsCount: number,
     pagesCount: number,
     nextPageIndex?: number,
