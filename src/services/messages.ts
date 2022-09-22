@@ -1,6 +1,5 @@
 import dotenv from 'dotenv'
 import { insert, selectAll, selectAllByPoster, selectLastByPoster, selectAllWithTag, selectById } from '../dal/Messages'
-import { selectAllByMessage } from '../dal/Tags'
 import { Response } from '../interfaces/IResponse'
 import { Message, PostMessageResp, GetMessagesResp, GetMessageResp } from '../interfaces/IMessage'
 import { Filter } from '../interfaces/IRequest'

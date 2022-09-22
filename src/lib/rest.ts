@@ -1,7 +1,14 @@
-interface ServerConfiguration {
-    server: any,
-    host: string | undefined,
-    port: number | undefined
+interface ServerConfiguration extends Server {
+    host?: string,
+    port?: number
+}
+interface Server {
+    server: {
+        use: (callback: any) => {},
+        listen: (port: number, callback: any) => {},
+        get: (path: string, callback: any) => {},
+        post: (path: string, callback: any) => {}
+    }
 }
 
 export class RestServer {
