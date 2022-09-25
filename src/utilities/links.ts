@@ -32,6 +32,8 @@ export function addTagsLinks(tags: Tag[],
 export function addPaginationLinks(pagination: Pagination): Links {
     const links: Links = {}
 
+    // TODO: add the filters to the links
+
     if (pagination.nextPageIndex) {
         links.next = {
             href: `/messages/?pageIndex=${pagination.nextPageIndex}&postsPerPage=${pagination.postsPerPage}`,
