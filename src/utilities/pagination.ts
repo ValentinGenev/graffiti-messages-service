@@ -6,7 +6,7 @@ import * as Links from '../utilities/links'
 import { isBlank } from './helper-functions';
 
 export const DEFAULT_PAGE_INDEX = 1
-export const DEFAULT_POSTS_PER_PAGE = 20
+export const DEFAULT_POSTS_PER_PAGE = 6
 
 export function parseData(query: Record<string, any>): Request.Pagination {
     return {
