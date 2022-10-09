@@ -34,7 +34,7 @@ export async function create(query: Record<string, any>): Promise<Response.Pagin
     if (pageIndex !== 1) {
         pagination.previousPageIndex = pageIndex - 1
     }
-    pagination._links = Links.addPaginationLinks(pagination)
+    pagination._links = Links.addPaginationLinks(pagination, query)
 
     return pagination
 }

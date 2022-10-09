@@ -29,23 +29,33 @@ export function addTagsLinks(tags: Tag[],
     })
 }
 
-export function addPaginationLinks(pagination: Pagination): Links {
+export function addPaginationLinks(pagination: Pagination, query: Record<string, any>): Links {
     const links: Links = {}
-
-    // TODO: add the filters to the links
+    query.postsPerPage = pagination.postsPerPage
 
     if (pagination.nextPageIndex) {
+        query.pageIndex = pagination.nextPageIndex
         links.next = {
-            href: `/messages/?pageIndex=${pagination.nextPageIndex}&postsPerPage=${pagination.postsPerPage}`,
+            href: `/messages/?${createQueryString(query)}`,
             name: 'Next page'
         }
     }
     if (pagination.previousPageIndex) {
+        query.pageIndex = pagination.previousPageIndex
         links.prev = {
-            href: `/messages/?pageIndex=${pagination.previousPageIndex}&postsPerPage=${pagination.postsPerPage}`,
+            href: `/messages/?${createQueryString(query)}`,
             name: 'Previous page'
         }
     }
 
     return links
+}
+
+function createQueryString(query: Record<string, any>): string {
+    const queryStrings = []
+
+    for (const key in query) {
+        queryStrings.push(`${key}=${query[key]}`);
+    }
+    return queryStrings.join('&')
 }
