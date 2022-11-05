@@ -2,7 +2,7 @@ import { Message } from "../../src/interfaces/IMessage"
 import { Filter } from "../../src/interfaces/IRequest"
 import { Response, Pagination } from "../../src/interfaces/IResponse"
 import { Tag } from "../../src/interfaces/ITag"
-import { Codes, MESSAGES } from "../../src/utilities/http-responses"
+import { CODES, MESSAGES } from "../../src/utilities/http-responses"
 
 export const posterId = 'randomfingerprintstring_test_read'
 export const messageId = 1
@@ -107,7 +107,7 @@ export const successResponse: Response = {
 export const failureResponse: Response = {
     success: false,
     error: {
-        code: Codes.InternalServerError,
+        code: CODES.InternalServerError,
         message: MESSAGES.internalServerError
     }
 }

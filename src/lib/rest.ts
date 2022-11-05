@@ -1,6 +1,6 @@
 interface ServerConfiguration extends Server {
-    host?: string,
-    port?: number
+    host: string,
+    port: number
 }
 interface Server {
     server: {
@@ -18,8 +18,8 @@ export class RestServer {
 
     constructor(configuration: ServerConfiguration) {
         this.server = configuration.server
-        this.host = configuration.host ? configuration.host : 'localhost'
-        this.port = configuration.port ? configuration.port : 5000
+        this.host = configuration.host
+        this.port = configuration.port
     }
 
     getServer() {
@@ -32,13 +32,10 @@ export class RestServer {
         return this.host
     }
 
-    start(): void {
+    start(callback: any) {
         const server = this.getServer()
-        const host = this.getHost()
         const port = this.getPort()
 
-        server.listen(port, () => {
-            console.log(`Server listening on: ${host}:${port}`)
-        })
+        server.listen(port, callback)
     }
 }
