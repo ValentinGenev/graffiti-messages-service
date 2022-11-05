@@ -5,7 +5,7 @@ import * as Links from '../../src/utilities/links'
 import * as MessagesDal from '../../src/dal/Messages'
 import * as Tags from '../../src/services/Tags'
 import * as Messages from '../../src/services/Messages'
-import { Codes } from '../../src/utilities/http-responses'
+import { CODES } from '../../src/utilities/http-responses'
 import { oldMessage, message, pagination, messageWithEmptyMessage, spamMessage,
     messageHugeMessage, messageWithTags, messageWithLinks, paginationFilter,
     posterFilter, tagFilter, messageId } from '../mock/data'
@@ -16,14 +16,14 @@ describe('Messages service tests:', () => {
             const response = await Messages.create(messageWithEmptyMessage)
 
             expect(response.success).toBeFalsy()
-            expect(response.error?.code === Codes.MissingData).toBeTruthy()
+            expect(response.error?.code === CODES.missingData).toBeTruthy()
         })
 
         test('create(messageHugeMessage) throws MaxLengthExceeded', async () => {
             const response = await Messages.create(messageHugeMessage)
 
             expect(response.success).toBeFalsy()
-            expect(response.error?.code === Codes.MaxLengthExceeded).toBeTruthy()
+            expect(response.error?.code === CODES.maxLengthExceeded).toBeTruthy()
         })
 
         test('create(spamMessage) throws TooManyRequests', async () => {
@@ -33,7 +33,7 @@ describe('Messages service tests:', () => {
             const response = await Messages.create(message)
 
             expect(response.success).toBeFalsy()
-            expect(response.error?.code === Codes.TooManyRequests).toBeTruthy()
+            expect(response.error?.code === CODES.tooManyRequests).toBeTruthy()
         })
 
         test('create(message)', async () => {
@@ -85,7 +85,7 @@ describe('Messages service tests:', () => {
             const response = await Messages.getAll(paginationFilter)
 
             expect(response.success).toBeFalsy()
-            expect(response.error?.code === Codes.NotFound).toBeTruthy()
+            expect(response.error?.code === CODES.notFound).toBeTruthy()
         })
     })
 
@@ -115,7 +115,7 @@ describe('Messages service tests:', () => {
             const response = await Messages.getAllByPosterId(paginationFilter)
 
             expect(response.success).toBeFalsy()
-            expect(response.error?.code === Codes.NotFound).toBeTruthy()
+            expect(response.error?.code === CODES.notFound).toBeTruthy()
         })
     })
 
@@ -145,7 +145,7 @@ describe('Messages service tests:', () => {
             const response = await Messages.getAllByTag(paginationFilter)
 
             expect(response.success).toBeFalsy()
-            expect(response.error?.code === Codes.NotFound).toBeTruthy()
+            expect(response.error?.code === CODES.notFound).toBeTruthy()
         })
     })
 
@@ -167,7 +167,7 @@ describe('Messages service tests:', () => {
             const response = await Messages.getById(messageId - 2)
 
             expect(response.success).toBeFalsy()
-            expect(response.error?.code === Codes.NotFound).toBeTruthy()
+            expect(response.error?.code === CODES.notFound).toBeTruthy()
         })
     })
 

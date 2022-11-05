@@ -1,14 +1,14 @@
-export enum Codes {
-    Ok = 'OK',
-    Created = 'CREATED',
-    BadRequest = 'BAD_REQUEST',
-    NotFound = 'NOT_FOUND',
-    InternalServerError = 'INTERNAL_SERVER_ERROR',
+export const CODES: Record<string, string> = {
+    ok: 'OK',
+    created: 'CREATED',
+    badRequest: 'BAD_REQUEST',
+    notFound: 'NOT_FOUND',
+    internalServerError: 'INTERNAL_SERVER_ERROR',
 
     // Custom errors
-    MissingData = 'MISSING_DATA',
-    TooManyRequests = 'TOO_MANY_REQUESTS',
-    MaxLengthExceeded = 'MAX_LENGTH_EXCEEDED'
+    missingData: 'MISSING_DATA',
+    tooManyRequests: 'TOO_MANY_REQUESTS',
+    maxLengthExceeded: 'MAX_LENGTH_EXCEEDED'
 }
 
 export const MESSAGES = {
@@ -20,7 +20,7 @@ export const MESSAGES = {
     maxLengthExceeded: 'Your message exceeds the maximum message length'
 }
 
-export const STATUSES: Record<string, number> = {
+export const STATUS_CODES: Record<string, number> = {
     'OK': 200,
     'CREATED': 201,
     'BAD_REQUEST': 400,

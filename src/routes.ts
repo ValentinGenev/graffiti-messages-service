@@ -3,7 +3,7 @@ import path from 'path'
 import { Request, Response } from 'express'
 import { RestServer } from './lib/rest'
 import { getMessages, getMessage, postMessage } from './controllers/Messages'
-import { handleInternalError } from './utilities/responses'
+import { handleHttpError } from './utilities/handle-http-error'
 
 dotenv.config()
 
@@ -29,6 +29,6 @@ export function documentation(_request: Request, response: Response) {
         response.sendFile(path.join(__dirname, '../../public/documentation.html'))
     }
     catch (error) {
-        handleInternalError(error, response)
+        handleHttpError(error, response)
     }
 }

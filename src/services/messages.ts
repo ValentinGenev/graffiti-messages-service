@@ -4,7 +4,7 @@ import { Response } from '../interfaces/IResponse'
 import { Message, PostMessageResp, GetMessagesResp, GetMessageResp } from '../interfaces/IMessage'
 import { Filter } from '../interfaces/IRequest'
 import { posterIsSpamming, sanitizeHtml } from '../utilities/helper-functions'
-import { Codes, MESSAGES } from '../utilities/http-responses'
+import { CODES, MESSAGES } from '../utilities/http-responses'
 import * as Pagination from '../utilities/pagination';
 import * as Links from '../utilities/links'
 import * as Tags from './Tags'
@@ -15,7 +15,7 @@ dotenv.config()
 const NOT_FOUND_RES: Response = {
     success: false,
     error: {
-        code: Codes.NotFound
+        code: CODES.notFound
     }
 }
 
@@ -24,7 +24,7 @@ export async function create(data: Message): Promise<PostMessageResp> {
         return {
             success: false,
             error: {
-                code: Codes.MissingData,
+                code: CODES.missingData,
                 message: MESSAGES.missingData('message')
             }
         }
@@ -34,7 +34,7 @@ export async function create(data: Message): Promise<PostMessageResp> {
         return {
             success: false,
             error: {
-                code: Codes.MaxLengthExceeded,
+                code: CODES.maxLengthExceeded,
                 message: MESSAGES.maxLengthExceeded
             }
         }
@@ -44,7 +44,7 @@ export async function create(data: Message): Promise<PostMessageResp> {
         return {
             success: false,
             error: {
-                code: Codes.TooManyRequests,
+                code: CODES.tooManyRequests,
                 message: MESSAGES.tooManyRequests(Number(process.env.TIME_LIMIT) / 60000)
             }
         }
